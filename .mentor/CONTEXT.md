@@ -24,7 +24,7 @@
 | Key | Value |
 |-----|-------|
 | Fase saat ini | **Fase 5 — Polish & Deployment** |
-| Modul saat ini | 5.4 — Deploy ke Vercel |
+| Modul saat ini | 5.5 — Review final & next steps (SELESAI) 🎉 |
 | Terakhir belajar | 2026-06-27 |
 | Total sesi | 2 |
 
@@ -67,8 +67,8 @@
 - [x] 5.1 — Animasi & UI polish ✅
 - [x] 5.2 — Responsive design ✅
 - [x] 5.3 — Performance optimization ✅
-- [ ] 5.4 — Deploy ke Vercel
-- [ ] 5.5 — Review final & next steps
+- [x] 5.4 — Deploy ke Vercel ✅
+- [x] 5.5 — Review final & next steps ✅
 
 ---
 

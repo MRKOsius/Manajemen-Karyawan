@@ -27,8 +27,9 @@ async function hapusKaryawan(formData: FormData) {
 }
 
 export default async function KaryawanPage() {
-    const memanggilAPI = await fetch("http://localhost:3000/api/karyawan", { cache: "no-store" });
-    const hasilJSON = await memanggilAPI.json();
+    const dataKaryawan = await prisma.karyawan.findMany({
+        orderBy: { createdAt: 'desc' }
+    });
 
     return (
         <section className="px-6 py-8">
@@ -38,7 +39,7 @@ export default async function KaryawanPage() {
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Data Karyawan</h1>
                     <p className="text-hris-muted text-sm mt-1">
-                        {hasilJSON.sukses ? `${hasilJSON.data.length} karyawan terdaftar` : "Memuat data..."}
+                        {dataKaryawan ? `${dataKaryawan.length} karyawan terdaftar` : "Memuat data..."}
                     </p>
                 </div>
                 <Link
@@ -50,7 +51,7 @@ export default async function KaryawanPage() {
             </div>
 
             {/* Tabel data — bukan card grid */}
-            {hasilJSON.sukses && hasilJSON.data.length > 0 ? (
+            {dataKaryawan && dataKaryawan.length > 0 ? (
                 <div className="border border-hris-border rounded-sm overflow-hidden">
                     <table className="w-full text-left">
                         <thead>
@@ -61,7 +62,7 @@ export default async function KaryawanPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-hris-border">
-                            {hasilJSON.data.map((karyawan: any) => (
+                            {dataKaryawan.map((karyawan: any) => (
                                 <tr key={karyawan.id} className="hover:bg-hris-surface transition-colors">
                                     <td className="px-4 py-3">
                                         <span className="font-medium text-hris-light">{karyawan.nama}</span>
