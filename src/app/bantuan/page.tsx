@@ -19,25 +19,24 @@ export default function HalamanBantuan(){
 
     return (
         <main className="p-10 max-w-2xl mx-auto">
-            <h1 className="text-3xl font-bold text-white mb-2">Hubungi Kami</h1>
-            <p className="text-gray-400 mb-8">Punya Keluhan teknis atau pertanyaan seputar aplikasi HR ini? Tinggalkan pesanmu di sini!</p>
-            <form action={kirimPesan} className="bg-gray-900 border border-gray-800 p-8 rounded-2xl flex flex-col gap-6 shadow-xl">
+            <h1 className="text-2xl font-bold text-hris-light tracking-tight mb-2">Pusat Bantuan</h1>
+            <p className="text-hris-muted text-sm mb-8">Punya keluhan teknis atau kendala sistem HRIS? Laporkan di bawah ini.</p>
+            <form action={kirimPesan} className="bg-hris-surface border border-hris-border p-8 rounded-sm flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Siapa Namamu?</label>
-                    <input type="text" name="nama" required className="bg-gray-800 border-none p-3 rounded-lg text-white outline-none focus:ring-2 focus:ring-blue-500 transition-shadow" placeholder="Misal: Rayyan" />
+                    <label className="text-sm font-semibold text-hris-light">Siapa Namamu?</label>
+                    <input type="text" name="nama" required className="bg-hris-primary border border-hris-border p-3 rounded-sm text-hris-light outline-none focus:ring-2 focus:ring-hris-accent transition-shadow" placeholder="Misal: Rayyan" />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Alamat Email</label>
-                    <input type="text" name="email" required className="bg-gray-800 border-none p-3 rounded-lg text-white outline-none focus:ring-2 focus:ring-blue-500 transition-shadow" placeholder="rayyan@contoh.com"/>
+                    <label className="text-sm font-semibold text-hris-light">Alamat Email</label>
+                    <input type="text" name="email" required className="bg-hris-primary border border-hris-border p-3 rounded-sm text-hris-light outline-none focus:ring-2 focus:ring-hris-accent transition-shadow" placeholder="contoh: rayyan@hris.corp"/>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Deskripsikan Pesanmu</label>
-                    <textarea name="isiPesan" rows={4} required className="bg-gray-800 border-none p-3 rounded-lg text-white outline-none focus:ring-2 focus:ring-blue-500 transition-shadow resize-none" placeholder="Bantu aku! Serverku kebakaran...."></textarea>
+                    <label className="text-sm font-semibold text-hris-light">Deskripsikan Pesanmu</label>
+                    <textarea name="isiPesan" rows={4} required className="bg-hris-primary border border-hris-border p-3 rounded-sm text-hris-light outline-none focus:ring-2 focus:ring-hris-accent transition-shadow resize-none" placeholder="Tulis rincian kendalamu..."></textarea>
                 </div>
-                
-                <button type="submit" className="mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 hover:scale-[1.02] active:scale-95 transition-all py-3 rounded-xl font-bold text-white uppercase tracking-wider text-sm shadow-lg shadow-blue-900/20">Kirim Pesan Melintasi Server</button>
+                <button type="submit" className="mt-2 bg-hris-light text-hris-primary hover:bg-hris-accent active:scale-[0.98] transition-all py-3 rounded-sm font-bold uppercase tracking-wider text-sm">Kirim Laporan</button>
             </form>
         </main>
     )
