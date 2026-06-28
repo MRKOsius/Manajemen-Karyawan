@@ -29,3 +29,26 @@ model Pesan {
   createdAt DateTime @default(now())
 }
 
+model Jabatan {
+  id        String   @id @default(uuid())
+  nama      String
+  deskripsi String?
+  createdAt DateTime @default(now())
+}
+
+model Departemen {
+  id        String   @id @default(uuid())
+  nama      String
+  lokasi    String
+  createdAt DateTime @default(now())
+}
+
+model GajiRiwayat {
+  id         String   @id @default(uuid())
+  karyawanId String
+  namaKaryawan String
+  bulan      String
+  nominal    Int
+  status     String   @default("Lunas")
+  createdAt  DateTime @default(now())
+}
