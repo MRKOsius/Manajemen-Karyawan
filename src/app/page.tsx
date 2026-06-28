@@ -1,7 +1,5 @@
-import MenuCard from "./components/MenuCard"
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import MenuCard from "./components/MenuCard";
+import prisma from "@/lib/prisma";
 
 // === DESIGN BRIEF ===
 // Dashboard utama — bukan landing page, ini command center

@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { PrismaClient } from "@prisma/client";
 import { redirect } from "next/navigation";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export default function TambahKaryawanPage() {
     async function simpanData(formData: FormData) {

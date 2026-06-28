@@ -1,18 +1,12 @@
-import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
+import prisma from "@/lib/prisma";
 
-// === DESIGN BRIEF ===
-// Halaman data karyawan — tabel data, bukan galeri card
-// Aksi (Edit/Hapus) jelas dan accessible
-// Empty state dengan arahan aksi
 export const metadata: Metadata = {
     title: 'Data Karyawan | HRIS Admin',
     description: 'Daftar kelola data karyawan perusahaan.',
 }
-
-const prisma = new PrismaClient();
 
 async function hapusKaryawan(formData: FormData) {
     "use server";

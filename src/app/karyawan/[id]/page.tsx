@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export default async function DetailKaryawan({ params }: { params: { id: string } }) {
     const { id } = await params;
