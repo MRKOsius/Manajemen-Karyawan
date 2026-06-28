@@ -10,6 +10,7 @@ const navLinks = [
     { label: "Jabatan", href: "/jabatan" },
     { label: "Departemen", href: "/departemen" },
     { label: "Gaji", href: "/gaji" },
+    { label: "Bantuan", href: "/bantuan" },
 ]
 
 export default function Header() {

@@ -17,5 +17,6 @@ export const config = {
         "/jabatan/:path*",
         "/departemen/:path*",
         "/gaji/:path*",
+        "/bantuan/:path*",
     ]
 }
