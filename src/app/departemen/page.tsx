@@ -1,22 +1,13 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
-import SubmitButton from "../components/SubmitButton";
+import Link from "next/link";
+import ActionDropdown from "../components/ActionDropdown";
+import EmptyState from "../components/EmptyState";
 
 export const metadata: Metadata = {
-    title: 'Data Departemen | HRIS Admin',
-    description: 'Daftar kelola divisi dan struktur.'
-}
-
-async function tambahDepartemen(formData: FormData) {
-    "use server";
-    const nama = formData.get("nama") as string;
-    const lokasi = formData.get("lokasi") as string;
-    
-    await prisma.departemen.create({
-        data: { nama, lokasi }
-    });
-    revalidatePath("/departemen");
+    title: 'Departemen | HRIS Admin',
+    description: 'Daftar kelola divisi dan operasional.'
 }
 
 async function hapusDepartemen(formData: FormData) {
@@ -24,12 +15,13 @@ async function hapusDepartemen(formData: FormData) {
     const id = formData.get("id") as string;
     await prisma.departemen.delete({ where: { id } });
     revalidatePath("/departemen");
+    revalidatePath("/");
 }
 
 export default async function DepartemenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-
     const params = await searchParams;
     const kataKunci = params?.q || "";
+    
     const dataDepartemen = await prisma.departemen.findMany({
         where: {
             nama: {
@@ -41,90 +33,92 @@ export default async function DepartemenPage({ searchParams }: { searchParams: P
     });
 
     return (
-        <section className="px-6 py-8">
-            <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-hris-light">Data Departemen</h1>
-                    <p className="text-hris-muted text-sm mt-1">Kelola divisi, unit kerja, dan pengelompokan tim.</p>
-                </div>
+        <section className="px-10 py-10 max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <h1 className="text-[18px] font-semibold text-ink-primary">Departemen</h1>
                 
-                <form method="GET" className="flex max-w-sm w-full">
-                    <input 
-                        type="text" 
-                        name="q" 
-                        defaultValue={kataKunci}
-                        placeholder="Cari divisi..." 
-                        className="w-full bg-hris-surface border-y border-l border-hris-border p-2 text-sm text-hris-light focus:outline-none focus:border-hris-accent"
-                    />
-                    <button type="submit" className="bg-hris-surface border border-hris-border p-2 text-sm text-hris-muted hover:text-hris-light transition-colors">
-                        Cari
-                    </button>
-                    {kataKunci && (
-                        <a href="/departemen" className="px-3 flex items-center text-xs text-hris-danger hover:underline">
-                            Clear
-                        </a>
-                    )}
-                </form>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-                
-                <div className="md:col-span-1">
-                    <form action={tambahDepartemen} className="bg-hris-surface border border-hris-border p-6 rounded-sm flex flex-col gap-4">
-                        <h2 className="text-lg font-bold text-hris-light border-b border-hris-border pb-2">Tambah Departemen</h2>
-                        
-                        <div className="flex flex-col gap-1">
-                            <label className="text-xs uppercase tracking-wider text-hris-muted">Nama Divisi</label>
-                            <input type="text" name="nama" required className="bg-hris-primary border border-hris-border p-2 text-hris-light text-sm outline-none focus:border-hris-accent" placeholder="Misal: Human Resources" />
-                        </div>
-
-                        <div className="flex flex-col gap-1">
-                            <label className="text-xs uppercase tracking-wider text-hris-muted">Lokasi / Gedung</label>
-                            <input type="text" name="lokasi" required className="bg-hris-primary border border-hris-border p-2 text-hris-light text-sm outline-none focus:border-hris-accent" placeholder="Misal: Lantai 4 / Tower B" />
-                        </div>
-                        
-                        <SubmitButton text="SIMPAN DEPARTEMEN" />
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                    <form method="GET" className="flex items-center w-full md:w-64 relative">
+                        <svg className="w-4 h-4 text-ink-muted absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            defaultValue={kataKunci}
+                            placeholder="Cari departemen..." 
+                            className="w-full bg-surface border border-border-default rounded-[6px] py-2 pl-9 pr-3 text-[13px] text-ink-primary focus:outline-none focus:border-border-focus"
+                        />
+                        {kataKunci && (
+                            <Link href="/departemen" className="absolute right-3 text-[11px] font-medium text-danger hover:underline">
+                                Clear
+                            </Link>
+                        )}
                     </form>
+                    
+                    <Link 
+                        href="/departemen/tambah" 
+                        className="bg-accent hover:bg-accent-hover text-white text-[13px] font-medium py-2 px-4 rounded-[6px] whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
+                    >
+                        + Tambah Departemen
+                    </Link>
                 </div>
-
-                <div className="md:col-span-2">
-                    {dataDepartemen.length > 0 ? (
-                        <div className="border border-hris-border overflow-hidden">
-                            <table className="w-full text-left text-sm">
-                                <thead>
-                                    <tr className="bg-hris-surface text-hris-muted text-xs font-mono uppercase">
-                                        <th className="px-4 py-3">Nama Divisi</th>
-                                        <th className="px-4 py-3">Lokasi (Gedung)</th>
-                                        <th className="px-4 py-3 text-right">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-hris-border">
-                                    {dataDepartemen.map((dept: any) => (
-                                        <tr key={dept.id} className="hover:bg-hris-surface transition-colors">
-                                            <td className="px-4 py-3 font-medium text-hris-light">{dept.nama}</td>
-                                            <td className="px-4 py-3 text-hris-muted text-xs">{dept.lokasi}</td>
-                                            <td className="px-4 py-3 text-right">
-                                                <div className="flex justify-end space-x-3 items-center">
-                                                    <a href={`/departemen/${dept.id}`} className="text-xs text-hris-info hover:underline">Edit</a>
-                                                    <form action={hapusDepartemen}>
-                                                        <input type="hidden" name="id" value={dept.id} />
-                                                        <button type="submit" className="text-xs text-hris-danger hover:underline mt-1">Hapus</button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <div className="border border-dashed border-hris-border p-10 text-center">
-                            <p className="text-hris-muted text-sm">Belum ada master data departemen.</p>
-                        </div>
-                    )}
-                </div>
-
             </div>
+
+            {dataDepartemen.length > 0 ? (
+                <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
+                    <table className="w-full text-left text-sm whitespace-nowrap">
+                        <thead>
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong">
+                                    Informasi Divisi
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-48">
+                                    Status
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-24">
+                                    Opsi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dataDepartemen.map((dept: any) => {
+                                const createDate = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }).format(dept.createdAt);
+                                
+                                return (
+                                <tr key={dept.id}>
+                                    <td className="px-6 py-3">
+                                        <p className="text-[14px] font-medium text-ink-primary">{dept.nama}</p>
+                                        <p className="text-[12px] font-mono text-ink-muted mt-0.5">
+                                            ID-{dept.id.substring(0,8)} · {dept.lokasi || "Ops: Seluruh Lokasi"} · {createDate}
+                                        </p>
+                                    </td>
+                                    <td className="px-6 py-3">
+                                       <span className="badge-active inline-flex items-center gap-1.5">
+                                           <span aria-hidden="true" className="text-[10px]">●</span> Aktif
+                                       </span>
+                                    </td>
+                                    <td className="px-6 py-3 text-right">
+                                        <ActionDropdown 
+                                            id={dept.id} 
+                                            entityName={dept.nama}
+                                            entityType="Departemen"
+                                            editHref={`/departemen/${dept.id}`}
+                                            deleteAction={hapusDepartemen}
+                                        />
+                                    </td>
+                                </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <EmptyState 
+                    title="Tidak ada referensi departemen" 
+                    body="Gunakan menu di atas untuk menambah unit operasi atau divisi baru."
+                    action="Tambah Departemen"
+                    actionHref="/departemen/tambah"
+                />
+            )}
         </section>
     )
 }

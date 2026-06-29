@@ -2,38 +2,32 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import ActionDropdown from "../components/ActionDropdown";
+import EmptyState from "../components/EmptyState";
 
 export const metadata: Metadata = {
-    title: 'Data Karyawan | HRIS Admin',
-    description: 'Daftar kelola data karyawan perusahaan.',
+    title: 'Karyawan | HRIS Admin',
+    description: 'Daftar kelola data karyawan.',
 }
 
 async function hapusKaryawan(formData: FormData) {
     "use server";
-
     const id = formData.get("id") as string;
-
-    await prisma.karyawan.delete({
-        where: { id: id }
-    });
-
+    await prisma.karyawan.delete({ where: { id: id } });
     revalidatePath("/karyawan")
 }
 
 export default async function KaryawanPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-
     const params = await searchParams;
     const kataKunci = params?.q || "";
 
     const dataKaryawan = await prisma.karyawan.findMany({
-
         where: {
             nama: {
                 contains: kataKunci,
                 mode: 'insensitive'
             }
         },
-
         orderBy: { createdAt: 'desc' },
         include: {
             jabatan: true,
@@ -42,99 +36,93 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
     });
 
     return (
-        <section className="px-6 py-8">
+        <section className="px-10 py-10 max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <h1 className="text-[18px] font-semibold text-ink-primary">Karyawan</h1>
 
-            {/* Page header dengan aksi */}
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Data Karyawan</h1>
-                        <p className="text-hris-muted text-sm mt-1">
-                            {dataKaryawan ? `${dataKaryawan.length} karyawan terdaftar` : "Memuat data..."}
-                        </p>
-                    </div>
-
-                    <form method="GET" className="flex-1 max-w-md mx-auto flex items-center">
-                        <input
-                            type="text"
-                            name="q"
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                    <form method="GET" className="flex items-center w-full md:w-64 relative">
+                        <svg className="w-4 h-4 text-ink-muted absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <input 
+                            type="text" 
+                            name="q" 
                             defaultValue={kataKunci}
-                            placeholder="Cari nama karyawan..."
-                            className="w-full bg-hris-surface border-y border-l border-hris-border p-2 text-sm text-hris-light focus:outline-none focus:border-hris-accent" />
-                        <button type="submit" className="bg-hris-surface border border-hris-border p-2 text-sm text-hris-muted hover:text-hris-light transition-colors">
-                            Cari
-                        </button>
+                            placeholder="Cari karyawan..." 
+                            className="w-full bg-surface border border-border-default rounded-[6px] py-2 pl-9 pr-3 text-[13px] text-ink-primary focus:outline-none focus:border-border-focus"
+                        />
                         {kataKunci && (
-                            <Link href="/karyawan" className="ml-2 text-xs text-hris-danger hover:underline">
-                                Hapus Filter
+                            <Link href="/karyawan" className="absolute right-3 text-[11px] font-medium text-danger hover:underline">
+                                Clear
                             </Link>
                         )}
                     </form>
+                    
                     <Link
                         href="/karyawan/tambah"
-                        className="bg-hris-accent text-hris-primary font-bold text-sm px-4 py-2 rounded-sm hover:brightness-110 transition"
+                        className="bg-accent hover:bg-accent-hover text-white text-[13px] font-medium py-2 px-4 rounded-[6px] whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
                     >
                         + Tambah Karyawan
                     </Link>
                 </div>
             </div>
 
-            {/* Tabel data — bukan card grid */}
             {dataKaryawan && dataKaryawan.length > 0 ? (
-                <div className="border border-hris-border rounded-sm overflow-hidden">
-                    <table className="w-full text-left">
+                <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
+                    <table className="w-full text-left text-sm whitespace-nowrap">
                         <thead>
-                            <tr className="bg-hris-surface text-hris-muted text-xs font-mono uppercase tracking-wider">
-                                <th className="px-4 py-3">Nama</th>
-                                <th className="px-4 py-3">Jabatan</th>
-                                <th className="px-4 py-3 text-right">Aksi</th>
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong">
+                                    Profil Karyawan
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-48">
+                                    Status
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-24">
+                                    Opsi
+                                </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-hris-border">
-                            {dataKaryawan.map((karyawan: any) => (
-                                <tr key={karyawan.id} className="hover:bg-hris-surface transition-colors">
-                                    <td className="px-4 py-3">
-                                        <span className="font-medium text-hris-light">{karyawan.nama}</span>
-                                        <span className="block text-xs text-hris-muted font-mono">Divisi: {karyawan.departemen?.nama}</span>
+                        <tbody>
+                            {dataKaryawan.map((karyawan: any) => {
+                                const formattedEmail = `${karyawan.nama.split(" ")[0].toLowerCase()}@hris.co.id`;
+                                const joinDate = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }).format(karyawan.createdAt);
+
+                                return (
+                                <tr key={karyawan.id}>
+                                    <td className="px-6 py-3">
+                                        <p className="text-[14px] font-medium text-ink-primary">{karyawan.nama}</p>
+                                        <p className="text-[12px] font-mono text-ink-muted mt-0.5">
+                                            {formattedEmail} · {karyawan.departemen?.nama || "Tanpa Departemen"} · {joinDate}
+                                        </p>
                                     </td>
-                                    <td className="px-4 py-3 text-sm text-hris-muted">{karyawan.jabatan?.nama}</td>
-                                    <td className="px-4 py-3 text-right">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={`/karyawan/${karyawan.id}`}
-                                                className="text-xs font-mono text-hris-info hover:text-hris-light transition-colors px-2 py-1 border border-hris-border rounded-sm hover:border-hris-info"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <form action={hapusKaryawan}>
-                                                <input type="hidden" name="id" value={karyawan.id} />
-                                                <button
-                                                    type="submit"
-                                                    className="text-xs font-mono text-hris-danger hover:text-hris-light transition-colors px-2 py-1 border border-hris-border rounded-sm hover:border-hris-danger hover:bg-hris-danger"
-                                                >
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        </div>
+                                    <td className="px-6 py-3">
+                                       <span className="badge-active inline-flex items-center gap-1.5">
+                                           <span aria-hidden="true" className="text-[10px]">●</span> Aktif
+                                       </span>
+                                    </td>
+                                    <td className="px-6 py-3 text-right">
+                                        <ActionDropdown 
+                                            id={karyawan.id} 
+                                            entityName={karyawan.nama}
+                                            entityType="Karyawan"
+                                            editHref={`/karyawan/${karyawan.id}`}
+                                            deleteAction={hapusKaryawan}
+                                        />
                                     </td>
                                 </tr>
-                            ))}
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>
             ) : (
-                /* Empty state — arahkan ke aksi, bukan hanya teks */
-                <div role="status" className="text-center py-16 border border-dashed border-hris-border rounded-sm">
-                    <p className="text-hris-muted mb-4">Belum ada data karyawan terdaftar.</p>
-                    <Link
-                        href="/karyawan/tambah"
-                        className="text-sm font-bold text-hris-accent hover:underline"
-                    >
-                        Tambah karyawan pertama
-                    </Link>
-                </div>
+                <EmptyState 
+                    title="Belum ada karyawan terdaftar" 
+                    body="Mulai dengan menambahkan profil karyawan pertama Anda ke dalam sistem."
+                    action="Tambah Karyawan Pertama"
+                    actionHref="/karyawan/tambah"
+                />
             )}
-
         </section>
     )
 }

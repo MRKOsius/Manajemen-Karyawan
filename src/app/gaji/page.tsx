@@ -1,26 +1,26 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
-import SubmitButton from "../components/SubmitButton"; // Kita pakai tombol pintar di sini sekalian!
+import SubmitButton from "../components/SubmitButton"; 
+import Link from "next/link";
+import EmptyState from "../components/EmptyState";
 
 export const metadata: Metadata = {
-    title: 'Data Gaji | HRIS Admin',
+    title: 'Gaji & Remunerasi | HRIS Admin',
     description: 'Manajemen payroll dan riwayat gaji.'
 }
 
 async function bayarGaji(formData: FormData) {
     "use server";
     const karyawanId = formData.get("karyawanId") as string;
-    // ❌ namaKaryawan DIHAPUS DARI SINI
     const nominal = Number(formData.get("nominal"));
     
     const date = new Date();
-    const bulanSekarang = date.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+    const bulanSekarang = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(date);
     
     await prisma.gajiRiwayat.create({
         data: {
             karyawanId, 
-            // ❌ namaKaryawan DIHAPUS DARI SINI
             bulan: bulanSekarang,
             nominal,
             status: "Ditransfer"
@@ -32,81 +32,107 @@ async function bayarGaji(formData: FormData) {
 
 export default async function GajiPage() {
     const dataKaryawan = await prisma.karyawan.findMany({
-        orderBy: { nama: 'asc' }
+        orderBy: { nama: 'asc' },
+        include: { departemen: true }
     });
 
-    // ✅ PENTING: Tambahkan 'include: { karyawan: true }' untuk menarik nama aslinya
     const riwayatGaji = await prisma.gajiRiwayat.findMany({
         orderBy: { createdAt: 'desc' },
-        include: {
-            karyawan: true
-        }
+        include: { karyawan: true }
     });
 
     return (
-        <section className="px-6 py-8">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold tracking-tight text-hris-light">Dasbor Payroll</h1>
-                <p className="text-hris-muted text-sm mt-1">Eksekusi pembayaran gaji bulanan karyawan.</p>
+        <section className="px-10 py-10 max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 className="text-[18px] font-semibold text-ink-primary">Gaji & Remunerasi</h1>
+                    <p className="font-mono text-[13px] text-ink-muted mt-1">Manajemen distribusi dan histori pencatatan keuangan karyawan</p>
+                </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 gap-8 items-start">
                 
                 {/* Kolom Kiri: Daftar Eksekusi */}
-                <div>
-                    <h2 className="text-lg font-bold text-hris-light border-b border-hris-border pb-2 mb-4">Pending Pembayaran</h2>
+                <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
+                    <div className="px-6 py-4 border-b border-border-default">
+                        <h2 className="text-[14px] font-medium text-ink-primary">Pending Pembayaran</h2>
+                    </div>
+
                     {dataKaryawan.length > 0 ? (
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col divide-y divide-border-default max-h-[600px] overflow-y-auto">
                             {dataKaryawan.map((k: any) => (
-                                <div key={k.id} className="bg-hris-surface border border-hris-border p-4 rounded-sm flex items-center justify-between hover:border-hris-accent transition-colors">
+                                <div key={k.id} className="px-6 py-5 flex items-center justify-between hover:bg-elevated transition-colors">
                                     <div>
-                                        <p className="font-bold text-hris-light text-sm">{k.nama}</p>
-                                        <p className="font-mono text-xs text-hris-muted">Gaji: Rp {k.gaji.toLocaleString('id-ID')}</p>
+                                        <p className="text-[14px] font-medium text-ink-primary">{k.nama}</p>
+                                        <p className="text-[12px] font-mono text-ink-secondary mt-1">
+                                            {k.departemen?.nama || "Tanpa Divisi"} · Rp {k.gaji.toLocaleString('id-ID')}
+                                        </p>
                                     </div>
-                                    <form action={bayarGaji}>
+                                    <form action={bayarGaji} className="shrink-0 ml-4">
                                         <input type="hidden" name="karyawanId" value={k.id} />
                                         <input type="hidden" name="nominal" value={k.gaji} />
-                                        {/* ❌ Input hidden namaKaryawan DIHAPUS */}
-                                        <SubmitButton text="BAYAR" />
+                                        <SubmitButton text="Transfer" />
                                     </form>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-hris-muted text-sm italic">Belum ada karyawan terdaftar.</p>
+                        <div className="p-8">
+                            <EmptyState 
+                                title="Data Karyawan Kosong" 
+                                body="Anda harus mendaftarkan karyawan terlebih dahulu sebelum mengeksekusi payroll."
+                                action="Ke Menu Karyawan"
+                                actionHref="/karyawan"
+                            />
+                        </div>
                     )}
                 </div>
 
                 {/* Kolom Kanan: Histori Transaksi */}
-                <div>
-                    <h2 className="text-lg font-bold text-hris-light border-b border-hris-border pb-2 mb-4">Log Transaksi (Berhasil)</h2>
+                <div className="bg-surface border border-border-default rounded-[8px] flex flex-col max-h-[660px]">
+                    <div className="px-6 py-4 border-b border-border-default shrink-0">
+                        <h2 className="text-[14px] font-medium text-ink-primary">Log Transaksi Berhasil</h2>
+                    </div>
+
                     {riwayatGaji.length > 0 ? (
-                        <div className="border border-hris-border overflow-hidden">
-                            <table className="w-full text-left text-sm">
-                                <thead>
-                                    <tr className="bg-hris-surface text-hris-muted text-xs font-mono uppercase">
-                                        <th className="px-4 py-3">Penerima</th>
-                                        <th className="px-4 py-3">Periode</th>
-                                        <th className="px-4 py-3 text-right">Ditransfer</th>
+                        <div className="overflow-y-auto w-full flex-1">
+                            <table className="w-full text-left text-sm whitespace-nowrap">
+                                <thead className="sticky top-0 z-10 shadow-sm border-b border-border-strong">
+                                    <tr>
+                                        <th className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted bg-canvas w-full">Data Transaksi</th>
+                                        <th className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted bg-canvas">Nominal (IDR)</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-hris-border">
-                                    {riwayatGaji.map((gaji: any) => (
-                                        <tr key={gaji.id} className="hover:bg-hris-surface transition-colors">
-                                            {/* ✅ Panggil nama menggunakan gaji.karyawan?.nama (Hasil Relasi) */}
-                                            <td className="px-4 py-3 font-medium text-hris-light">{gaji.karyawan?.nama}</td>
-                                            <td className="px-4 py-3 text-hris-muted text-xs">{gaji.bulan}</td>
-                                            <td className="px-4 py-3 text-right font-mono text-xs text-hris-accent">
-                                                Rp {gaji.nominal.toLocaleString('id-ID')}
+                                <tbody>
+                                    {riwayatGaji.map((gaji: any) => {
+                                        const tglTf = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(gaji.createdAt);
+                                        return (
+                                        <tr key={gaji.id}>
+                                            <td className="px-6 py-4 border-b border-border-default hover:bg-elevated transition-colors">
+                                                <p className="text-[14px] font-medium text-ink-primary">{gaji.karyawan?.nama}</p>
+                                                <p className="text-[12px] font-mono text-ink-muted mt-0.5">
+                                                    Periode {gaji.bulan} · {tglTf}
+                                                </p>
+                                            </td>
+                                            <td className="px-6 py-4 text-right border-b border-border-default hover:bg-elevated transition-colors">
+                                               <div className="flex flex-col items-end">
+                                                   <span className="badge-active mb-1 text-[10px] w-fit">Ditransfer</span>
+                                                   <span className="text-[13px] font-mono font-medium text-success">
+                                                     +{gaji.nominal.toLocaleString('id-ID')}
+                                                   </span>
+                                               </div>
                                             </td>
                                         </tr>
-                                    ))}
+                                        )
+                                    })}
                                 </tbody>
                             </table>
                         </div>
                     ) : (
-                        <div className="border border-dashed border-hris-border p-10 text-center">
-                            <p className="text-hris-muted text-sm border">Log riwayat penggajian masih kosong.</p>
+                        <div className="p-8">
+                            <div className="border border-dashed border-border-default rounded-[8px] p-10 text-center bg-canvas">
+                                <p className="text-[13px] text-ink-secondary">Log riwayat penggajian masih bersih.</p>
+                            </div>
                         </div>
                     )}
                 </div>

@@ -1,22 +1,15 @@
-"use client";
+"use client"
+import { useFormStatus } from "react-dom"
 
-import { useFormStatus } from "react-dom";
-
-export default function SubmitButton({ text = "SIMPAN PERUBAHAN" }: { text?: string }) {
-    const { pending } = useFormStatus();
-
+export default function SubmitButton({ text = "Simpan Perubahan" }: { text?: string }) {
+    const { pending } = useFormStatus()
     return (
-        <button
-            type="submit"
+        <button 
+            type="submit" 
             disabled={pending}
-            className={`w-full sm:w-auto font-bold py-3 px-8 rounded-sm transition-all focus:ring-2 focus:ring-hris-info
-                ${pending
-                    ? "bg-hris-muted text-gray-500 cursor-not-allowed scale-100"
-                    : "bg-hris-light text-hris-primary hover:bg-hris-accent active:scale-[0.98]"
-                }`
-            }
+            className={`px-6 py-2.5 bg-accent text-white rounded-[6px] text-[13px] font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent ${pending ? "opacity-70 cursor-not-allowed" : "hover:bg-accent-hover"}`}
         >
-            {pending ? "SEDANG MEMPROSES..." : text}
+            {pending ? "Menyimpan..." : text}
         </button>
     )
 }

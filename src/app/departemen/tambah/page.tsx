@@ -3,26 +3,18 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import SubmitButton from "@/app/components/SubmitButton";
 
-export default async function DetailDepartemen({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-
-    const departemen = await prisma.departemen.findUnique({
-        where: { id: id }
-    });
-
-    if (!departemen) return <div className="p-10 text-center text-ink-muted mt-10 w-full">Departemen tidak ditemukan.</div>;
-
-    async function updateData(formData: FormData) {
+export default async function TambahDepartemenPage() {
+    async function simpanData(formData: FormData) {
         "use server";
+
         const nama = formData.get("nama") as string;
         const lokasi = formData.get("lokasi") as string;
-
-        await prisma.departemen.update({
-            where: { id: id },
+        
+        await prisma.departemen.create({
             data: { nama, lokasi }
         });
 
-        redirect("/departemen");
+        redirect("/departemen")
     }
 
     return (
@@ -30,26 +22,23 @@ export default async function DetailDepartemen({ params }: { params: Promise<{ i
             
             <div className="w-full text-left mb-8">
                 <Link href="/departemen" className="text-[13px] font-sans text-ink-secondary hover:text-ink-primary transition-colors flex items-center gap-1.5 focus:outline-none focus-visible:underline">
-                    ← Departemen / Edit Departemen
+                    ← Departemen / Tambah Departemen
                 </Link>
-                <div className="mt-6">
-                    <h1 className="text-[20px] font-semibold text-ink-primary tracking-tight">Edit Master Departemen</h1>
-                    <p className="text-ink-muted text-[12px] font-mono mt-0.5">UUID: {departemen.id}</p>
-                </div>
+                <h1 className="text-[20px] font-semibold text-ink-primary mt-4">Tambah Master Departemen</h1>
             </div>
 
-            <form action={updateData} className="w-full bg-surface border border-border-default rounded-[8px] overflow-hidden">
+            <form action={simpanData} className="w-full bg-surface border border-border-default rounded-[8px] overflow-hidden">
                 <div className="p-8">
                     <div className="mb-0">
                         <h2 className="text-[11px] uppercase tracking-[0.06em] text-ink-muted font-medium mb-6">Informasi Divisi</h2>
                         <div className="gap-6 flex flex-col">
                             <div className="flex flex-col">
                                 <label htmlFor="nama" className="text-[13px] font-medium text-ink-primary mb-1">Nama Departemen</label>
-                                <input id="nama" name="nama" type="text" defaultValue={departemen.nama} required className="hris-input" />
+                                <input id="nama" type="text" name="nama" required className="hris-input" placeholder="Misal: Divisi Finansial" />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="lokasi" className="text-[13px] font-medium text-ink-primary mb-1">Lokasi Gedung / Operasi</label>
-                                <input id="lokasi" name="lokasi" type="text" defaultValue={departemen.lokasi} required className="hris-input" />
+                                <input id="lokasi" type="text" name="lokasi" required className="hris-input" placeholder="Lantai 12A Tower Alpha" />
                             </div>
                         </div>
                     </div>
@@ -62,10 +51,9 @@ export default async function DetailDepartemen({ params }: { params: Promise<{ i
                     >
                         Batalkan
                     </Link>
-                    <SubmitButton text="Update Departemen" />
+                    <SubmitButton text="Simpan Departemen" />
                 </div>
-                
             </form>
         </section>
-    );
+    )
 }

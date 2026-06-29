@@ -3,26 +3,21 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import SubmitButton from "@/app/components/SubmitButton";
 
-export default async function DetailJabatan({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-
-    const jabatan = await prisma.jabatan.findUnique({
-        where: { id: id }
-    });
-
-    if (!jabatan) return <div className="p-10 text-center text-ink-muted mt-10 w-full">Jabatan tidak ditemukan.</div>;
-
-    async function updateData(formData: FormData) {
+export default async function TambahJabatanPage() {
+    async function simpanData(formData: FormData) {
         "use server";
+
         const nama = formData.get("nama") as string;
         const deskripsi = formData.get("deskripsi") as string;
 
-        await prisma.jabatan.update({
-            where: { id: id },
-            data: { nama, deskripsi }
+        await prisma.jabatan.create({
+            data: {
+                nama,
+                deskripsi
+            }
         });
 
-        redirect("/jabatan");
+        redirect("/jabatan")
     }
 
     return (
@@ -30,26 +25,23 @@ export default async function DetailJabatan({ params }: { params: Promise<{ id: 
             
             <div className="w-full text-left mb-8">
                 <Link href="/jabatan" className="text-[13px] font-sans text-ink-secondary hover:text-ink-primary transition-colors flex items-center gap-1.5 focus:outline-none focus-visible:underline">
-                    ← Jabatan / Edit Jabatan
+                    ← Jabatan / Tambah Jabatan
                 </Link>
-                <div className="mt-6">
-                    <h1 className="text-[20px] font-semibold text-ink-primary tracking-tight">Edit Master Jabatan</h1>
-                    <p className="text-ink-muted text-[12px] font-mono mt-0.5">UUID: {jabatan.id}</p>
-                </div>
+                <h1 className="text-[20px] font-semibold text-ink-primary mt-4">Tambah Referensi Jabatan</h1>
             </div>
 
-            <form action={updateData} className="w-full bg-surface border border-border-default rounded-[8px] overflow-hidden">
+            <form action={simpanData} className="w-full bg-surface border border-border-default rounded-[8px] overflow-hidden">
                 <div className="p-8">
                     <div className="mb-0">
                         <h2 className="text-[11px] uppercase tracking-[0.06em] text-ink-muted font-medium mb-6">Informasi Posisi</h2>
                         <div className="gap-6 flex flex-col">
                             <div className="flex flex-col">
                                 <label htmlFor="nama" className="text-[13px] font-medium text-ink-primary mb-1">Nama Jabatan</label>
-                                <input id="nama" name="nama" type="text" defaultValue={jabatan.nama} required className="hris-input" />
+                                <input id="nama" type="text" name="nama" required className="hris-input" placeholder="Misal: Manager Operasional" />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="deskripsi" className="text-[13px] font-medium text-ink-primary mb-1">Deskripsi Tugas</label>
-                                <textarea id="deskripsi" name="deskripsi" rows={4} defaultValue={jabatan.deskripsi || ""} className="hris-input resize-none"></textarea>
+                                <textarea id="deskripsi" name="deskripsi" rows={3} className="hris-input resize-none" placeholder="Tugas dan tanggung jawab detail..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -62,10 +54,9 @@ export default async function DetailJabatan({ params }: { params: Promise<{ id: 
                     >
                         Batalkan
                     </Link>
-                    <SubmitButton text="Update Jabatan" />
+                    <SubmitButton text="Simpan Jabatan" />
                 </div>
-                
             </form>
         </section>
-    );
+    )
 }
