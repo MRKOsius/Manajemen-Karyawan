@@ -3,13 +3,14 @@ import prisma from "@/lib/prisma";
 import Image from "next/image";
 
 export default async function Home() {
-  const totalKaryawan = await prisma.karyawan.count();
-  const totalDepartemen = await prisma.departemen.count();
+  const totalKaryawan = await prisma.karyawan.count({ where: { isActive: true } });
+  const totalDepartemen = await prisma.departemen.count({ where: { isActive: true } });
   const totalGaji = await prisma.gajiRiwayat.count();
   
   // Data rekrutan terbaru
   const karyawanBaru = await prisma.karyawan.findMany({
     take: 5,
+    where: { isActive: true },
     orderBy: { createdAt: 'desc' },
     include: { departemen: true, jabatan: true }
   });

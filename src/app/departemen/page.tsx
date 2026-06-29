@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Search } from "lucide-react";
 import ActionDropdown from "../components/ActionDropdown";
 import EmptyState from "../components/EmptyState";
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 async function hapusDepartemen(formData: FormData) {
     "use server";
     const id = formData.get("id") as string;
-    await prisma.departemen.delete({ where: { id } });
+    await prisma.departemen.update({ where: { id }, data: { isActive: false } });
     revalidatePath("/departemen");
     revalidatePath("/");
 }
@@ -24,6 +25,7 @@ export default async function DepartemenPage({ searchParams }: { searchParams: P
     
     const dataDepartemen = await prisma.departemen.findMany({
         where: {
+            isActive: true,
             nama: {
                 contains: kataKunci,
                 mode: 'insensitive'
@@ -39,7 +41,7 @@ export default async function DepartemenPage({ searchParams }: { searchParams: P
                 
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <form method="GET" className="flex items-center w-full md:w-64 relative">
-                        <svg className="w-4 h-4 text-ink-muted absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <Search className="w-4 h-4 text-ink-muted absolute left-3" />
                         <input 
                             type="text" 
                             name="q" 

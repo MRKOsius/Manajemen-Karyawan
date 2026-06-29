@@ -32,6 +32,7 @@ async function bayarGaji(formData: FormData) {
 
 export default async function GajiPage() {
     const dataKaryawan = await prisma.karyawan.findMany({
+        where: { isActive: true },
         orderBy: { nama: 'asc' },
         include: { departemen: true }
     });

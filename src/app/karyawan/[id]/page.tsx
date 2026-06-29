@@ -13,8 +13,8 @@ export default async function DetailKaryawan({ params }: { params: Promise<{ id:
 
     if (!karyawan) return <div className="p-10 text-center text-ink-muted mt-10 w-full col-span-full">Karyawan tidak ditemukan.</div>;
 
-    const pilihanJabatan = await prisma.jabatan.findMany();
-    const pilihanDepartemen = await prisma.departemen.findMany();
+    const pilihanJabatan = await prisma.jabatan.findMany({ where: { isActive: true } });
+    const pilihanDepartemen = await prisma.departemen.findMany({ where: { isActive: true } });
 
     async function updateData(formData: FormData) {
         "use server";
