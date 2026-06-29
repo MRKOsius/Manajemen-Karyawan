@@ -65,7 +65,7 @@ export default function Sidebar({ sessionData }: { sessionData?: Record<string, 
                     </div>
                     <div className="overflow-hidden lg:hidden xl:block">
                         <p className="text-[13px] font-medium text-ink-primary truncate leading-tight capitalize">
-                            {sessionData?.role || "Rayyan"}
+                            {String(sessionData?.role || "Rayyan")}
                         </p>
                         <p className="text-[11px] text-ink-muted truncate">Administrator</p>
                     </div>

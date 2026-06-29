@@ -41,7 +41,7 @@ export default function ActionDropdown({ id, editHref, deleteAction, entityName,
            setIsConfirmOpen(false);
         }
       } catch (err) {
-        toast.error(err.message || "Gagal menghubungi server");
+        toast.error(err instanceof Error ? err.message : "Gagal menghubungi server");
       }
     });
   }

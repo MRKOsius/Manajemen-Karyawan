@@ -22,7 +22,7 @@ async function hapusDepartemen(formData: FormData) {
         revalidatePath("/departemen");
         revalidatePath("/");
     } catch (error) {
-        if (error.code === 'P2003') {
+        if (error instanceof Error && (error as { code?: string }).code === 'P2003') {
             return { error: "Dilarang: Departemen ini masih memiliki Karyawan tersangkut." };
         }
         return { error: "Gagal menghapus ke dalam database." };
