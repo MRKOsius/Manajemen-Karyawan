@@ -26,16 +26,45 @@ async function hapusDepartemen(formData: FormData) {
     revalidatePath("/departemen");
 }
 
-export default async function DepartemenPage() {
+export default async function DepartemenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+
+    const params = await searchParams;
+    const kataKunci = params?.q || "";
     const dataDepartemen = await prisma.departemen.findMany({
+        where: {
+            nama: {
+                contains: kataKunci,
+                mode: 'insensitive'
+            }
+        },
         orderBy: { createdAt: 'desc' }
     });
 
     return (
         <section className="px-6 py-8">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold tracking-tight text-hris-light">Data Departemen</h1>
-                <p className="text-hris-muted text-sm mt-1">Kelola divisi, unit kerja, dan pengelompokan tim.</p>
+            <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-hris-light">Data Departemen</h1>
+                    <p className="text-hris-muted text-sm mt-1">Kelola divisi, unit kerja, dan pengelompokan tim.</p>
+                </div>
+                
+                <form method="GET" className="flex max-w-sm w-full">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        defaultValue={kataKunci}
+                        placeholder="Cari divisi..." 
+                        className="w-full bg-hris-surface border-y border-l border-hris-border p-2 text-sm text-hris-light focus:outline-none focus:border-hris-accent"
+                    />
+                    <button type="submit" className="bg-hris-surface border border-hris-border p-2 text-sm text-hris-muted hover:text-hris-light transition-colors">
+                        Cari
+                    </button>
+                    {kataKunci && (
+                        <a href="/departemen" className="px-3 flex items-center text-xs text-hris-danger hover:underline">
+                            Clear
+                        </a>
+                    )}
+                </form>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -75,10 +104,13 @@ export default async function DepartemenPage() {
                                             <td className="px-4 py-3 font-medium text-hris-light">{dept.nama}</td>
                                             <td className="px-4 py-3 text-hris-muted text-xs">{dept.lokasi}</td>
                                             <td className="px-4 py-3 text-right">
-                                                <form action={hapusDepartemen}>
-                                                    <input type="hidden" name="id" value={dept.id} />
-                                                    <button type="submit" className="text-xs text-hris-danger hover:underline">Hapus</button>
-                                                </form>
+                                                <div className="flex justify-end space-x-3 items-center">
+                                                    <a href={`/departemen/${dept.id}`} className="text-xs text-hris-info hover:underline">Edit</a>
+                                                    <form action={hapusDepartemen}>
+                                                        <input type="hidden" name="id" value={dept.id} />
+                                                        <button type="submit" className="text-xs text-hris-danger hover:underline mt-1">Hapus</button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
