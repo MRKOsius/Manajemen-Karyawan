@@ -269,6 +269,20 @@ select.hris-input {
 /* ---break---
 */
 .dark {
+  --bg-canvas: #0C0A09;
+  --bg-surface: #1C1917;
+  --bg-elevated: #292524;
+  --bg-sunken: #000000;
+  --ink-primary: #FAFAF9;
+  --ink-secondary: #D6D3D1;
+  --ink-muted: #A8A29E;
+  --ink-disabled: #78716C;
+  --border-default: #292524;
+  --border-strong: #44403C;
+  --border-focus: #F59E0B;
+  --accent-light: #451a03;
+  --accent: #F59E0B;
+  
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

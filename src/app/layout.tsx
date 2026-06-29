@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={cn("h-full", "antialiased", instrumentSerif.variable, jetbrainsMono.variable, "font-sans", geist.variable)}
+      className={cn("dark", "h-full", "antialiased", instrumentSerif.variable, jetbrainsMono.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-screen bg-canvas text-ink-primary font-sans">
         <Toaster 
