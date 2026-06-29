@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function LoginForm({ action }: { action: (formData: FormData) => void }) {
     const [showPassword, setShowPassword] = useState(false);
@@ -46,12 +47,12 @@ export default function LoginForm({ action }: { action: (formData: FormData) => 
                 </div>
             </div>
 
-            <button 
+            <Button 
                 type="submit" 
-                className="w-full bg-accent text-white hover:bg-accent-hover font-medium rounded-[6px] py-[12px] px-6 mt-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
+                className="w-full mt-2"
             >
                 Akses Dashboard
-            </button>
+            </Button>
             
             <p className="text-center text-[11px] text-ink-muted mt-4">
                 HRIS Admin v1.0

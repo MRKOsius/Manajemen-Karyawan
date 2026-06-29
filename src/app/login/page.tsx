@@ -41,9 +41,9 @@ export default function LoginPage() {
             }}
         >
             <div className="bg-surface border border-border-default rounded-[8px] p-10 w-full max-w-[400px]">
-                <p className="font-serif text-[14px] text-accent mb-2">HRIS</p>
-                <h1 className="font-serif text-[28px] text-ink-primary leading-[1.2] mb-6">
-                    Kelola Kapital Manusia Terpadu.
+                <p className="font-sans text-[12px] font-semibold text-ink-muted tracking-widest uppercase mb-3">HRIS</p>
+                <h1 className="font-serif text-[32px] text-accent leading-[1.1] mb-6">
+                    Masa Depan Manajemen Karyawan.
                 </h1>
                 
                 <hr className="border-t border-border-default mb-6" />
