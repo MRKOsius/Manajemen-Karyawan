@@ -14,9 +14,19 @@ export const metadata: Metadata = {
 async function hapusDepartemen(formData: FormData) {
     "use server";
     const id = formData.get("id") as string;
-    await prisma.departemen.update({ where: { id }, data: { isActive: false } });
-    revalidatePath("/departemen");
-    revalidatePath("/");
+    
+    try {
+        // Melakukan Hapus Permanen agar sistem constraint Prisma (P2003) bekerja
+        await prisma.departemen.delete({ where: { id: id } });
+        
+        revalidatePath("/departemen");
+        revalidatePath("/");
+    } catch (error: any) {
+        if (error.code === 'P2003') {
+            return { error: "Dilarang: Departemen ini masih memiliki Karyawan tersangkut." };
+        }
+        return { error: "Gagal menghapus ke dalam database." };
+    }
 }
 
 export default async function DepartemenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
@@ -66,7 +76,7 @@ export default async function DepartemenPage({ searchParams }: { searchParams: P
             </div>
 
             {dataDepartemen.length > 0 ? (
-                <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
+                <div className="bg-surface border border-border-default rounded-[8px]">
                     <table className="w-full text-left text-sm whitespace-nowrap">
                         <thead>
                             <tr>

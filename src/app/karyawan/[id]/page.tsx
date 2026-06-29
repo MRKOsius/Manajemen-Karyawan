@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import SubmitButton from "@/app/components/SubmitButton";
+import CustomSelect from "@/app/components/CustomSelect";
 
 export default async function DetailKaryawan({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -44,13 +45,19 @@ export default async function DetailKaryawan({ params }: { params: Promise<{ id:
                     ← Karyawan / Detail Karyawan
                 </Link>
                 <div className="flex items-center gap-4 mt-6">
-                    <Image 
-                        src={`https://api.dicebear.com/9.x/avataaars/png?seed=${karyawan.id}`}
-                        alt={`Foto ${karyawan.nama}`}
-                        width={64}
-                        height={64}
-                        className="rounded-full border border-border-default bg-surface" 
-                    />
+                    {karyawan.avatar ? (
+                        <img 
+                            src={karyawan.avatar}
+                            alt={`Foto ${karyawan.nama}`}
+                            width={64}
+                            height={64}
+                            className="rounded-full border border-border-default bg-surface w-16 h-16 object-cover" 
+                        />
+                    ) : (
+                        <div className="w-16 h-16 rounded-full border border-border-default bg-elevated flex items-center justify-center">
+                            <span className="text-[20px] font-medium text-ink-secondary">{karyawan.nama.substring(0, 2).toUpperCase()}</span>
+                        </div>
+                    )}
                     <div>
                         <h1 className="text-[20px] font-semibold text-ink-primary tracking-tight">{karyawan.nama}</h1>
                         <p className="text-ink-muted text-[12px] font-mono mt-0.5">UUID: {karyawan.id}</p>
@@ -81,21 +88,21 @@ export default async function DetailKaryawan({ params }: { params: Promise<{ id:
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="flex flex-col">
                                 <label htmlFor="jabatanId" className="text-[13px] font-medium text-ink-primary mb-1">Jabatan</label>
-                                <select id="jabatanId" name="jabatanId" defaultValue={karyawan.jabatanId} required className="hris-input">
-                                    <option value="" disabled>-- Pilih Jabatan --</option>
-                                    {pilihanJabatan.map((jbtn) => (
-                                        <option key={jbtn.id} value={jbtn.id}>{jbtn.nama}</option>
-                                    ))}
-                                </select>
+                                <CustomSelect 
+                                    name="jabatanId" 
+                                    options={pilihanJabatan} 
+                                    placeholder="-- Pilih Jabatan --" 
+                                    defaultValue={karyawan.jabatanId}
+                                />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="departemenID" className="text-[13px] font-medium text-ink-primary mb-1">Departemen</label>
-                                <select id="departemenID" name="departemenID" defaultValue={karyawan.departemenID} required className="hris-input">
-                                    <option value="" disabled>-- Pilih Departemen --</option>
-                                    {pilihanDepartemen.map((dept) => (
-                                        <option key={dept.id} value={dept.id}>{dept.nama}</option>
-                                    ))}
-                                </select>
+                                <CustomSelect 
+                                    name="departemenID" 
+                                    options={pilihanDepartemen} 
+                                    placeholder="-- Pilih Departemen --" 
+                                    defaultValue={karyawan.departemenID || ""}
+                                />
                             </div>
                         </div>
                     </div>

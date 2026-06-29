@@ -1,41 +1,48 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-export function proxy(request: NextRequest) {
-  // Ambil token cookies 
-  const isLoggedIn = request.cookies.get('isLoggedIn')
+import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from "@/lib/session";
+
+// 1. Tentukan rute-rute mana saja yang HARUS login untuk bisa masuk
+// Kita pakai awalan supaya rute seperti /karyawan/tambah juga ikut aman.
+const protectedPrefixes = ['/karyawan', '/departemen', '/jabatan', '/absensi', '/gaji']; 
+const publicRoutes = ['/login'];
+
+export async function proxy(req: NextRequest) {
+  // Ambil rute jalan yang sedang dikunjungi user
+  const path = req.nextUrl.pathname;
   
-  // Deteksi URL saat ini
-  const { pathname } = request.nextUrl
-  const isLoginPage = pathname === "/login"
+  // Cek apakah halaman ini termasuk rahasia
+  const isProtectedRoute = path === '/' || protectedPrefixes.some(p => path.startsWith(p));
+  const isPublicRoute = publicRoutes.includes(path);
+
+  // 2. Ambil "Tiket" (Cookie) dari browser user
+  const sessionCookie = req.cookies.get('session')?.value;
   
-  // RESTRUKTUR LOGIKA:
-  // 1. Jika User mencoba masuk BUKAN ke halaman login (/login), TAPI belum punya cookie:
-  if (!isLoggedIn && !isLoginPage) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // 3. Baca keaslian tiket menggunakan fungsi utilitas kita
+  const session = await decrypt(sessionCookie);
+
+  // 4. Logika Pengusiran (Redirect)
+  
+  // Kasus A: Jika mau masuk area rahasia, TAPI tidak punya session (belum terdaftar)
+  if (isProtectedRoute && !session) {
+    return NextResponse.redirect(new URL('/login', req.nextUrl)); // Tendang ke login
   }
-  
-  // 2. Jika User SUDAH punya cookie TAPI nekat kembali ke halaman (/login):
-  if (isLoggedIn && isLoginPage) {
-     return NextResponse.redirect(new URL('/', request.url))
+
+  // Kasus B: Jika iseng buka /login, TAPI tiketnya masih ada alias sudah login
+  if (isPublicRoute && session) {
+    return NextResponse.redirect(new URL('/', req.nextUrl)); // Lemparkan ke dalam Dashboard
   }
-  
-  // 3. Biarkan saja selain 2 kondisi di atas
-  return NextResponse.next()
+
+  // Kasus C: Filter RBAC (Restriksi Halaman Gaji)
+  if (path.startsWith('/gaji') && session?.role !== "SUPER_ADMIN") {
+    // Jika user biasa mencoba menyusup ke halaman Finansial Gaji, kembalikan ke Beranda!
+    return NextResponse.redirect(new URL('/', req.nextUrl)); 
+  }
+
+  // Izinkan lewat jika aman
+  return NextResponse.next();
 }
- 
-// Batasi middleware ini HANYA untuk path yang berhubungan dengan UI kita.
-// Hindari melarang akses ke folder /_next (asset, css, gambar), 
-// karena nanti halaman login jadinya berantakan tanpa css.
+
+// 5. Konfigurasi agar "satpam" tidak mengecek file statis seperti gambar biar tidak boros resource
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 }

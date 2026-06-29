@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import LoginForm from "./LoginForm";
 import { Container } from "lucide-react";
+import { createSession } from "@/lib/session";
 
 export default function LoginPage() {
     async function prosesLogin(formData: FormData) {
@@ -20,13 +21,8 @@ export default function LoginPage() {
             const passwordCocok = await bcrypt.compare(password, akunAdmin.password);
             
             if (passwordCocok) {
-                const cookieStore = await cookies();
 
-                cookieStore.set("isLoggedIn", "true", {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    maxAge: 60 * 60 * 24
-                });
+                await createSession(akunAdmin.id, akunAdmin.role)
 
                 redirect("/");
             }

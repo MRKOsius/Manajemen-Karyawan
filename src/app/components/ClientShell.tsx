@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import React, { useState } from "react";
 import { Menu } from "lucide-react";
 
-export default function ClientShell({ children }: { children: React.ReactNode }) {
+export default function ClientShell({ children, sessionData }: { children: React.ReactNode, sessionData?: any }) {
     const pathname = usePathname();
     const isFullscreenPage = pathname === "/login" || pathname === "/setup";
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,13 +39,15 @@ export default function ClientShell({ children }: { children: React.ReactNode })
                 onClick={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Kontainer Sidebar (Geser di HP, Statis di Desktop) */}
-            <div className={`fixed top-0 left-0 h-screen z-50 transform transition-transform duration-300 md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}`}>
-                <Sidebar />
+            {/* Kontainer Sidebar (Responsive 3 Level) */}
+            <div className={`fixed top-0 left-0 h-screen z-50 transform transition-all duration-300 md:block 
+                ${isMobileMenuOpen ? 'translate-x-0 shadow-2xl w-[240px]' : '-translate-x-full md:translate-x-0 lg:w-[60px] xl:w-[240px] md:w-[240px]'}`}>
+                <Sidebar sessionData={sessionData} />
             </div>
 
-            {/* Wilayah Konten Utama (Bergeser otomatis di belakang sidebar Desktop) */}
-            <main className="flex-1 min-h-screen w-full md:ml-[240px] transition-all pb-24 md:pb-0">
+            {/* Wilayah Konten Utama */}
+            <main className="flex-1 min-h-screen w-full transition-all pb-24 md:pb-0 
+                md:ml-[240px] lg:ml-[60px] xl:ml-[240px]">
                 {children}
             </main>
         </div>

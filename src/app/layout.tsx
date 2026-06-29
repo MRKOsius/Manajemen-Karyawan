@@ -4,6 +4,7 @@ import "./globals.css";
 import ClientShell from "./components/ClientShell";
 import { Toaster } from "sonner";
 import { cn } from "@/lib/utils";
+import { getSession } from "@/lib/session";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
@@ -24,11 +25,13 @@ export const metadata: Metadata = {
   description: "Portal manajemen data karyawan, jabatan, departemen, dan payroll.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sessionData = await getSession();
+
   return (
     <html
       lang="id"
@@ -47,7 +50,7 @@ export default function RootLayout({
           }} 
         />
         
-        <ClientShell>
+        <ClientShell sessionData={sessionData}>
           {children}
         </ClientShell>
         

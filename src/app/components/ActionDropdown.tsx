@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { MoreHorizontal } from "lucide-react";
 
 interface ActionDropdownProps {
   id: string;
   editHref: string;
-  deleteAction: (formData: FormData) => void;
+  deleteAction: (formData: FormData) => Promise<{ error?: string } | void | undefined>;
   entityName: string;
   entityType?: string;
 }
@@ -15,6 +16,7 @@ interface ActionDropdownProps {
 export default function ActionDropdown({ id, editHref, deleteAction, entityName, entityType = "Data" }: ActionDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,17 +29,34 @@ export default function ActionDropdown({ id, editHref, deleteAction, entityName,
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  function handleAction(formData: FormData) {
+    if (isPending) return;
+    startTransition(async () => {
+      try {
+        const response = await deleteAction(formData);
+        if (response?.error) {
+           toast.error(response.error);
+        } else {
+           toast.success(`${entityName} berhasil dihapus`);
+           setIsConfirmOpen(false);
+        }
+      } catch (err: any) {
+        toast.error(err.message || "Gagal menghubungi server");
+      }
+    });
+  }
+
   return (
     <>
       <div className="relative inline-block text-left" ref={dropdownRef}>
         <button 
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="p-1 text-ink-muted hover:text-ink-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-border-focus rounded"
+          className="p-1.5 text-ink-secondary hover:text-ink-primary hover:bg-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-border-focus rounded-[6px] transition-colors"
           aria-label={`Opsi untuk ${entityName}`}
           aria-expanded={isOpen}
         >
-          <span aria-hidden="true" className="text-lg leading-none cursor-pointer">⋯</span>
+          <MoreHorizontal className="w-4 h-4 cursor-pointer" />
         </button>
 
         {isOpen && (
@@ -72,11 +91,7 @@ export default function ActionDropdown({ id, editHref, deleteAction, entityName,
             </p>
             
             <form 
-              action={deleteAction} 
-              onSubmit={() => {
-                setIsConfirmOpen(false);
-                toast.success(`${entityName} berhasil dihapus`);
-              }}
+              action={handleAction} 
               className="flex justify-end gap-3"
             >
               <input type="hidden" name="id" value={id} />
@@ -91,9 +106,10 @@ export default function ActionDropdown({ id, editHref, deleteAction, entityName,
               
               <button 
                 type="submit"
-                className="px-4 py-2 text-[13px] font-medium text-danger bg-danger-bg border border-transparent rounded-[6px] hover:bg-danger/10 transition-colors"
+                disabled={isPending}
+                className="px-4 py-2 text-[13px] font-medium text-danger bg-danger-bg border border-transparent rounded-[6px] hover:bg-danger/10 transition-colors disabled:opacity-50"
               >
-                Hapus {entityType}
+                {isPending ? "Menghapus..." : `Hapus ${entityType}`}
               </button>
             </form>
           </div>

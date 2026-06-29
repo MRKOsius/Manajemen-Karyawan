@@ -139,6 +139,7 @@ body {
   background: var(--bg-canvas);
   color: var(--ink-primary);
   font-family: var(--font-sans);
+  color-scheme: dark;
 }
 
 *:focus-visible {
@@ -173,6 +174,15 @@ tbody tr:hover {
   border-radius: 20px;
 }
 
+.badge-danger {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--danger);
+  background: var(--danger-bg);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
 /* Form Inputs */
 .hris-input {
   border: 1px solid var(--border-default);
@@ -199,6 +209,13 @@ select.hris-input {
   background-position: right .7em top 50%, 0 0;
   background-size: .65em auto, 100%;
 }
+
+select.hris-input option {
+  background-color: var(--bg-surface);
+  color: var(--ink-primary);
+  padding: 8px;
+}
+
 
 /* Dropdown Menu CSS */
 .dropdown-content {

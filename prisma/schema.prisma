@@ -22,9 +22,12 @@ model Karyawan {
   jabatanId     String
   departemenID  String
 
+  avatar        String?
+
   jabatan       Jabatan     @relation(fields: [jabatanId], references: [id])
   departemen    Departemen  @relation(fields: [departemenID], references: [id])
   gajiRiwayat   GajiRiwayat[]
+  absensi       Absensi[]
 }
 
 model Pesan {
@@ -71,5 +74,15 @@ model Admin {
   id            String   @id @default(uuid())
   username      String   @unique
   password      String   
+  role          String   @default("HR_STAFF") // Kasta: SUPER_ADMIN atau HR_STAFF
   createdAt     DateTime @default(now())
+}
+
+model Absensi {
+  id            String   @id @default(uuid())
+  tipe          String   // "Masuk" atau "Keluar"
+  waktu         DateTime @default(now())
+  
+  karyawanId    String
+  karyawan      Karyawan @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
 }

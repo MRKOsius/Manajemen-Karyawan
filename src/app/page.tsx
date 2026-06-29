@@ -1,10 +1,15 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/session";
+import DashboardChart from "./components/DashboardChart";
 
 export default async function Home() {
   const totalKaryawan = await prisma.karyawan.count({ where: { isActive: true } });
   const totalDepartemen = await prisma.departemen.count({ where: { isActive: true } });
+  
+  const totalAbsensi = await prisma.absensi.count();
   const totalGaji = await prisma.gajiRiwayat.count();
+  const session = await getSession();
   
   // Data rekrutan terbaru
   const karyawanBaru = await prisma.karyawan.findMany({
@@ -14,16 +19,31 @@ export default async function Home() {
     include: { departemen: true, jabatan: true }
   });
 
-  
+  const departemenMentah = await prisma.departemen.findMany({
+      where: { isActive: true },
+      include: {
+          _count: {
+              select: { karyawan: { where: { isActive: true } } }
+          }
+      }
+  });
+
+  // Urutkan dari yang paling banyak ke paling sedikit
+  const grafikDistribusi = departemenMentah
+      .map(dept => ({
+          name: dept.nama,
+          total: dept._count.karyawan
+      }))
+      .sort((a, b) => b.total - a.total);
 
   return (
     <section className="px-10 py-10 max-w-6xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <h1 className="text-[18px] font-semibold text-ink-primary">Dashboard</h1>
+        <h1 className="text-[18px] font-semibold text-ink-primary">Dashboard (Halo, {String(session?.role)}!)</h1>
       </div>
 
       {/* Stat Cards Level 1 */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-8">
+      <div className={`grid gap-4 grid-cols-1 mb-8 ${session?.role === 'SUPER_ADMIN' ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
         <div className="bg-surface border border-border-default rounded-[8px] px-6 py-5">
           <p className="font-sans text-[11px] uppercase tracking-[0.08em] text-ink-muted mb-2">Total Karyawan</p>
           {totalKaryawan > 0 ? (
@@ -57,24 +77,52 @@ export default async function Home() {
         </div>
 
         <div className="bg-surface border border-border-default rounded-[8px] px-6 py-5">
-           <p className="font-sans text-[11px] uppercase tracking-[0.08em] text-ink-muted mb-2">Riwayat Gaji</p>
-          {totalGaji > 0 ? (
+          <p className="font-sans text-[11px] uppercase tracking-[0.08em] text-ink-muted mb-2">Rekam Jaga (Absensi)</p>
+          {totalAbsensi > 0 ? (
             <>
               <p className="font-mono text-[24px] font-semibold text-ink-primary mt-1">
-                {totalGaji} <span className="font-sans text-sm font-normal text-ink-secondary">catatan</span>
+                {totalAbsensi} <span className="font-sans text-sm font-normal text-ink-secondary">taps</span>
               </p>
-              <p className="font-sans text-[12px] text-success mt-2">Bulan ini dibayarkan</p>
+              <p className="font-sans text-[12px] text-success mt-2">Data log masuk/keluar</p>
             </>
           ) : (
             <p className="text-sm text-ink-muted mt-2">
-              Belum ada data · <Link href="/gaji" className="text-accent underline text-sm">Kelola</Link>
+              Belum ada data · <Link href="/absensi" className="text-accent underline text-sm">Pantau</Link>
             </p>
           )}
         </div>
+
+        {session?.role === 'SUPER_ADMIN' && (
+            <div className="bg-surface border border-border-default rounded-[8px] px-6 py-5">
+              <p className="font-sans text-[11px] uppercase tracking-[0.08em] text-ink-muted mb-2">Riwayat Gaji</p>
+              {totalGaji > 0 ? (
+                <>
+                  <p className="font-mono text-[24px] font-semibold text-ink-primary mt-1">
+                    {totalGaji} <span className="font-sans text-sm font-normal text-ink-secondary">catatan</span>
+                  </p>
+                  <p className="font-sans text-[12px] text-success mt-2">Bulan ini dibayarkan</p>
+                </>
+              ) : (
+                <p className="text-sm text-ink-muted mt-2">
+                  Belum ada data · <Link href="/gaji" className="text-accent underline text-sm">Kelola</Link>
+                </p>
+              )}
+            </div>
+        )}
       </div>
 
-      {/* Konten Area Baru: Talenta Terbaru */}
-      <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
+      <div className="grid md:grid-cols-2 gap-8 mb-8">
+          {/* Grafik Recharts Utama */}
+          <div className="bg-surface border border-border-default rounded-[8px] p-6 flex flex-col justify-between">
+              <div>
+                  <h2 className="text-[14px] font-medium text-ink-primary">Rasio Distribusi Departemen</h2>
+                  <p className="text-[12px] text-ink-muted mt-1">Populasi karyawan aktif pada tiap unit operasional.</p>
+              </div>
+              <DashboardChart data={grafikDistribusi} />
+          </div>
+
+          {/* Konten Area Baru: Talenta Terbaru */}
+          <div className="bg-surface border border-border-default rounded-[8px] flex flex-col overflow-hidden">
         <div className="px-6 py-5 border-b border-border-default flex items-center justify-between">
             <h2 className="text-[14px] font-medium text-ink-primary">Talenta Terbaru (Recent Hires)</h2>
             <Link href="/karyawan" className="text-[12px] font-medium text-accent hover:underline">
@@ -129,6 +177,7 @@ export default async function Home() {
             </div>
         )}
       </div>
+    </div>
 
     </section>
   );
