@@ -34,7 +34,7 @@ export default function LoginForm({ action }: { action: (formData: FormData) => 
                     />
                     <button
                         type="button"
-                        className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-ink-muted hover:text-ink-primary"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-ink-muted hover:text-ink-primary"
                         onClick={() => setShowPassword(!showPassword)}
                         aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
                     >
@@ -49,9 +49,9 @@ export default function LoginForm({ action }: { action: (formData: FormData) => 
 
             <Button 
                 type="submit" 
-                className="w-full mt-2"
+                className="w-full mt-4 bg-accent text-white hover:bg-accent-hover font-medium py-6 text-[14px] rounded-[6px]"
             >
-                Akses Dashboard
+                Masuk ke Dashboard
             </Button>
             
             <p className="text-center text-[11px] text-ink-muted mt-4">

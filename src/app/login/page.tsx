@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import LoginForm from "./LoginForm";
+import { Container } from "lucide-react";
 
 export default function LoginPage() {
     async function prosesLogin(formData: FormData) {
@@ -34,19 +35,23 @@ export default function LoginPage() {
 
     return (
         <div 
-            className="min-h-screen flex items-center justify-center bg-canvas"
+            className="min-h-screen flex items-center justify-center bg-canvas relative"
             style={{
                 backgroundImage: "radial-gradient(circle, var(--border-default) 1px, transparent 1px)",
                 backgroundSize: "24px 24px"
             }}
         >
-            <div className="bg-surface border border-border-default rounded-[8px] p-10 w-full max-w-[400px]">
-                <p className="font-sans text-[12px] font-semibold text-ink-muted tracking-widest uppercase mb-3">HRIS</p>
-                <h1 className="font-serif text-[32px] text-accent leading-[1.1] mb-6">
-                    Masa Depan Manajemen Karyawan.
-                </h1>
+            <div className="bg-surface border border-border-strong shadow-sm rounded-[8px] p-10 w-full max-w-[420px] relative z-10">
                 
-                <hr className="border-t border-border-default mb-6" />
+                <div className="w-12 h-12 bg-accent-light border border-accent/20 text-accent rounded-[10px] flex items-center justify-center mb-8 shadow-sm">
+                    <Container strokeWidth={1.5} size={24} />
+                </div>
+
+                <p className="font-sans text-[11px] font-semibold text-accent tracking-[0.15em] uppercase mb-3">Sistem Akses Intranet</p>
+                <h1 className="font-serif text-[34px] text-ink-primary leading-[1.05] tracking-tight mb-8">
+                    Kelola Kapital <br/> Manusia Terpadu.
+                </h1>
+                <hr className="border-t border-border-default mb-8" />
 
                 <LoginForm action={prosesLogin} />
             </div>
