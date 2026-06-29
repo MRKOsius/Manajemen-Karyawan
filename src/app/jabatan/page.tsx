@@ -82,7 +82,7 @@ export default async function JabatanPage({ searchParams }: { searchParams: Prom
                             </tr>
                         </thead>
                         <tbody>
-                            {dataJabatan.map((jabatan: any) => {
+                            {dataJabatan.map((jabatan) => {
                                 const createDate = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }).format(jabatan.createdAt);
 
                                 return (

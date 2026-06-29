@@ -2,7 +2,6 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import ActionDropdown from "../components/ActionDropdown";
 import EmptyState from "../components/EmptyState";
@@ -86,7 +85,7 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                             </tr>
                         </thead>
                         <tbody>
-                            {dataKaryawan.map((karyawan: any) => {
+                            {dataKaryawan.map((karyawan) => {
                                 const formattedEmail = `${karyawan.nama.split(" ")[0].toLowerCase()}@hris.co.id`;
                                 const joinDate = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }).format(karyawan.createdAt);
 

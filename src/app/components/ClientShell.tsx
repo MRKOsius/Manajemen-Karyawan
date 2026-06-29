@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Menu } from "lucide-react";
 
 export default function ClientShell({ children }: { children: React.ReactNode }) {
@@ -10,10 +10,13 @@ export default function ClientShell({ children }: { children: React.ReactNode })
     const isFullscreenPage = pathname === "/login" || pathname === "/setup";
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    const [prevPathname, setPrevPathname] = useState(pathname);
+
     // Menutup paksa sidebar mobile saat URL/Rute berubah
-    useEffect(() => {
+    if (pathname !== prevPathname) {
         setIsMobileMenuOpen(false);
-    }, [pathname]);
+        setPrevPathname(pathname);
+    }
 
     if (isFullscreenPage) {
         return <main className="bg-canvas min-h-screen">{children}</main>;

@@ -82,7 +82,7 @@ export default async function DepartemenPage({ searchParams }: { searchParams: P
                             </tr>
                         </thead>
                         <tbody>
-                            {dataDepartemen.map((dept: any) => {
+                            {dataDepartemen.map((dept) => {
                                 const createDate = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }).format(dept.createdAt);
                                 
                                 return (

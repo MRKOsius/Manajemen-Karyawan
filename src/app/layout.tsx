@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono, Geist } from "next/font/google";
+import { Instrument_Serif, JetBrains_Mono, Geist } from "next/font/google";
 import "./globals.css";
 import ClientShell from "./components/ClientShell";
 import { Toaster } from "sonner";

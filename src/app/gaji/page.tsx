@@ -2,7 +2,6 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import SubmitButton from "../components/SubmitButton"; 
-import Link from "next/link";
 import EmptyState from "../components/EmptyState";
 
 export const metadata: Metadata = {
@@ -61,7 +60,7 @@ export default async function GajiPage() {
 
                     {dataKaryawan.length > 0 ? (
                         <div className="flex flex-col divide-y divide-border-default max-h-[600px] overflow-y-auto">
-                            {dataKaryawan.map((k: any) => (
+                            {dataKaryawan.map((k) => (
                                 <div key={k.id} className="px-6 py-5 flex items-center justify-between hover:bg-elevated transition-colors">
                                     <div>
                                         <p className="text-[14px] font-medium text-ink-primary">{k.nama}</p>
@@ -105,7 +104,7 @@ export default async function GajiPage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {riwayatGaji.map((gaji: any) => {
+                                    {riwayatGaji.map((gaji) => {
                                         const tglTf = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(gaji.createdAt);
                                         return (
                                         <tr key={gaji.id}>

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
-import Image from "next/image";
 
 export default async function Home() {
   const totalKaryawan = await prisma.karyawan.count({ where: { isActive: true } });
@@ -91,6 +90,7 @@ export default async function Home() {
                     return (
                         <div key={karyawan.id} className="px-6 py-4 flex items-center justify-between hover:bg-elevated transition-colors">
                             <div className="flex items-center gap-4">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img 
                                     src={`https://api.dicebear.com/9.x/avataaars/png?seed=${karyawan.id}`}
                                     alt={`Avatar ${karyawan.nama}`}

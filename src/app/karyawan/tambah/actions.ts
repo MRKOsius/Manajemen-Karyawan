@@ -11,7 +11,7 @@ const skemaKaryawan = z.object({
     departemenId: z.string().min(1, "Distribusi unit divisi wajib diterapkan.")
 });
 
-export async function simpanKaryawan(prevState: any, formData: FormData) {
+export async function simpanKaryawan(prevState: unknown, formData: FormData) {
     const rawData = {
         nama: formData.get("nama"),
         gaji: formData.get("gaji"),
@@ -39,7 +39,7 @@ export async function simpanKaryawan(prevState: any, formData: FormData) {
                 gaji: validasi.data.gaji,
             }
         });
-    } catch (e) {
+    } catch {
         return {
             message: "Maaf, mesin Database (Prisma) gagal mengeksekusi rekaman data ini. Hubungi IT."
         };

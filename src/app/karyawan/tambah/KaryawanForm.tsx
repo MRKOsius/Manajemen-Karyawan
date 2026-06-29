@@ -5,7 +5,7 @@ import Link from "next/link";
 import SubmitButton from "@/app/components/SubmitButton";
 import { simpanKaryawan } from "./actions";
 
-export default function KaryawanForm({ pilihanJabatan, pilihanDepartemen }: { pilihanJabatan: any[], pilihanDepartemen: any[] }) {
+export default function KaryawanForm({ pilihanJabatan, pilihanDepartemen }: { pilihanJabatan: { id: string; nama: string }[], pilihanDepartemen: { id: string; nama: string }[] }) {
     const [state, formAction] = useFormState(simpanKaryawan, null);
 
     return (
