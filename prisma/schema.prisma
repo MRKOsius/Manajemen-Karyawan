@@ -13,42 +13,60 @@ datasource db {
 }
 
 model Karyawan {
-  id        String   @id @default(uuid())
-  nama      String
-  jabatan   String
-  divisi    String
-  gaji      Int
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  nama          String
+  gaji          Int
+  createdAt     DateTime @default(now())
+
+  jabatanId     String
+  departemenID  String
+
+  jabatan       Jabatan     @relation(fields: [jabatanId], references: [id])
+  departemen    Departemen  @relation(fields: [departemenID], references: [id])
+  gajiRiwayat   GajiRiwayat[]
 }
 
 model Pesan {
-  id        String @id @default(uuid())
-  nama      String
-  email     String
-  isiPesan  String
-  createdAt DateTime @default(now())
+  id            String @id @default(uuid())
+  nama          String
+  email         String
+  isiPesan      String
+  createdAt     DateTime @default(now())
 }
 
 model Jabatan {
-  id        String   @id @default(uuid())
-  nama      String
-  deskripsi String?
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  nama          String
+  deskripsi     String?
+  createdAt     DateTime @default(now())
+
+  karyawan      Karyawan[]
 }
 
 model Departemen {
-  id        String   @id @default(uuid())
-  nama      String
-  lokasi    String
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  nama          String
+  lokasi        String
+  createdAt     DateTime @default(now())
+
+  karyawan      Karyawan[]
 }
 
 model GajiRiwayat {
-  id         String   @id @default(uuid())
-  karyawanId String
-  namaKaryawan String
-  bulan      String
-  nominal    Int
-  status     String   @default("Lunas")
-  createdAt  DateTime @default(now())
+  id            String   @id @default(uuid())
+  bulan         String
+  nominal       Int
+  status        String   @default("Lunas")
+  createdAt     DateTime @default(now())
+
+  karyawanId    String
+
+  karyawan      Karyawan @relation(fields: [karyawanId], references: [id], onDelete: Cascade)
+}
+
+model Admin {
+  id            String   @id @default(uuid())
+  username      String   @unique
+  password      String   
+  createdAt     DateTime @default(now())
 }

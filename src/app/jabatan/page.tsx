@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
+import SubmitButton from "../components/SubmitButton";
 
 export const metadata: Metadata = {
     title: 'Data Jabatan | HRIS Admin',
@@ -54,9 +55,7 @@ export default async function JabatanPage() {
                             <textarea name="deskripsi" rows={3} className="bg-hris-primary border border-hris-border p-2 text-hris-light text-sm outline-none focus:border-hris-accent resize-none" placeholder="Deskripsi tugas..."></textarea>
                         </div>
                         
-                        <button type="submit" className="mt-2 bg-hris-light text-hris-primary py-2 text-sm font-bold active:scale-[0.98] transition-transform">
-                            SIMPAN JABATAN
-                        </button>
+                        <SubmitButton text="SIMPAN JABATAN" />
                     </form>
                 </div>
 

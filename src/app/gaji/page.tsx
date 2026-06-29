@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
+import SubmitButton from "../components/SubmitButton"; // Kita pakai tombol pintar di sini sekalian!
 
 export const metadata: Metadata = {
     title: 'Data Gaji | HRIS Admin',
@@ -10,17 +11,16 @@ export const metadata: Metadata = {
 async function bayarGaji(formData: FormData) {
     "use server";
     const karyawanId = formData.get("karyawanId") as string;
-    const namaKaryawan = formData.get("namaKaryawan") as string;
+    // ❌ namaKaryawan DIHAPUS DARI SINI
     const nominal = Number(formData.get("nominal"));
     
-    // Auto-generate bulan saat ini (misal: "Juni 2026")
     const date = new Date();
     const bulanSekarang = date.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
     
     await prisma.gajiRiwayat.create({
         data: {
-            karyawanId,
-            namaKaryawan,
+            karyawanId, 
+            // ❌ namaKaryawan DIHAPUS DARI SINI
             bulan: bulanSekarang,
             nominal,
             status: "Ditransfer"
@@ -31,14 +31,16 @@ async function bayarGaji(formData: FormData) {
 }
 
 export default async function GajiPage() {
-    // Tarik semua karyawan untuk didaftarkan di form bayar
     const dataKaryawan = await prisma.karyawan.findMany({
         orderBy: { nama: 'asc' }
     });
 
-    // Tarik riwayat gaji yang sudah dibayar
+    // ✅ PENTING: Tambahkan 'include: { karyawan: true }' untuk menarik nama aslinya
     const riwayatGaji = await prisma.gajiRiwayat.findMany({
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        include: {
+            karyawan: true
+        }
     });
 
     return (
@@ -63,11 +65,9 @@ export default async function GajiPage() {
                                     </div>
                                     <form action={bayarGaji}>
                                         <input type="hidden" name="karyawanId" value={k.id} />
-                                        <input type="hidden" name="namaKaryawan" value={k.nama} />
                                         <input type="hidden" name="nominal" value={k.gaji} />
-                                        <button type="submit" className="bg-hris-info/20 text-hris-info border border-hris-info hover:bg-hris-info hover:text-white text-xs px-3 py-1.5 font-bold transition-all">
-                                            BAYAR
-                                        </button>
+                                        {/* ❌ Input hidden namaKaryawan DIHAPUS */}
+                                        <SubmitButton text="BAYAR" />
                                     </form>
                                 </div>
                             ))}
@@ -93,7 +93,8 @@ export default async function GajiPage() {
                                 <tbody className="divide-y divide-hris-border">
                                     {riwayatGaji.map((gaji: any) => (
                                         <tr key={gaji.id} className="hover:bg-hris-surface transition-colors">
-                                            <td className="px-4 py-3 font-medium text-hris-light">{gaji.namaKaryawan}</td>
+                                            {/* ✅ Panggil nama menggunakan gaji.karyawan?.nama (Hasil Relasi) */}
+                                            <td className="px-4 py-3 font-medium text-hris-light">{gaji.karyawan?.nama}</td>
                                             <td className="px-4 py-3 text-hris-muted text-xs">{gaji.bulan}</td>
                                             <td className="px-4 py-3 text-right font-mono text-xs text-hris-accent">
                                                 Rp {gaji.nominal.toLocaleString('id-ID')}

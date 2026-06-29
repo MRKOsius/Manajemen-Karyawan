@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
+import SubmitButton from "../components/SubmitButton";
 
 export const metadata: Metadata = {
     title: 'Data Departemen | HRIS Admin',
@@ -53,9 +54,7 @@ export default async function DepartemenPage() {
                             <input type="text" name="lokasi" required className="bg-hris-primary border border-hris-border p-2 text-hris-light text-sm outline-none focus:border-hris-accent" placeholder="Misal: Lantai 4 / Tower B" />
                         </div>
                         
-                        <button type="submit" className="mt-2 bg-hris-light text-hris-primary py-2 text-sm font-bold active:scale-[0.98] transition-transform">
-                            SIMPAN DEPARTEMEN
-                        </button>
+                        <SubmitButton text="SIMPAN DEPARTEMEN" />
                     </form>
                 </div>
 

@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 export default function LoginPage() {
     async function prosesLogin(formData: FormData) {
@@ -7,18 +9,26 @@ export default function LoginPage() {
 
         const password = formData.get("password") as string;
 
-        if (password === "admin123") {
-            const cookieStore = await cookies();
+        const akunAdmin = await prisma.admin.findUnique({
+            where: { username: "admin" }
+        });
 
-            cookieStore.set("isLoggedIn", "true", {
-                httpOnly: true,
-                secure: false,
-                maxAge: 60 * 60 * 24
-            });
+        if (akunAdmin) {
+            const passwordCocok = await bcrypt.compare(password, akunAdmin.password);
+            
+            if (passwordCocok) {
+                const cookieStore = await cookies();
 
-            redirect("/karyawan");
-        } else {
-            console.log("Password salah!");
+                cookieStore.set("isLoggedIn", "true", {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    maxAge: 60 * 60 * 24
+                });
+
+                redirect("/karyawan");
+            } else {
+                console.log("Password salah!");
+            }
         }
     }
 
