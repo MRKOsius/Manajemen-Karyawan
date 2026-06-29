@@ -1,49 +1,57 @@
-# NexHR — Enterprise HRIS Dashboard
+# NexHR — Enterprise HRIS Dashboard (V2)
 
-Sebuah purwarupa Sistem Informasi Manajemen Sumber Daya Manusia (HRIS) kelas premium yang dibangun di atas kerangka kerja mutakhir **Next.js 16 (App Router)**. Proyek ini mendemonstrasikan keahlian arsitektur tingkat lanjut dengan mengintegrasikan sistem basis data persisten, lapisan proteksi otorisasi, dan validasi sisi serambi (*server-side*).
+Sebuah Sistem Informasi Manajemen Sumber Daya Manusia (HRIS) kelas premium yang dibangun di atas kerangka kerja mutakhir **Next.js 16 (App Router)**. Proyek ini mendemonstrasikan keahlian arsitektur *Fullstack* tingkat lanjut dengan mengintegrasikan sistem basis data persisten, lapisan proteksi otorisasi, arsitektur UI/UX kaku (Figma V2), dan validasi sisi peladen (*server-side*).
 
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
 ![Framework](https://img.shields.io/badge/Next.js-16.2.9-black)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL%20(Neon)-blue)
+![UI](https://img.shields.io/badge/UI-V2%20Design%20System-orange)
 
-## 🌟 Sorotan Fitur Pendekatan Enterprise
+## 🌟 Sorotan Fitur Enterprise (Ekspansi V2)
 
 Berbeda dengan proyek *Dashboard* kasual, repositori ini ditopang oleh fondasi keamanan dan pilar keandalan tingkat komersil:
 
-- **Auth Middleware (`proxy.ts`)**: Melindungi celah akses anonim menggunakan deteksi *Session Cookies* berkecepatan pinggir jaringan (*Edge speed*).
-- **Injeksi Soft-Delete Orto-Grafis**: Algoritma `.delete()` yang telah berevolusi menjadi penyembunyian transparan `isActive: false` (Menjaga relasi Integritas Repositori Riwayat Gaji & Keuangan tetap suci selamanya).
-- **Zod Data Shield**: Skema *Server Actions* dilapisi Zod untuk meregulasi ketat integritas Data Masukan (*Input*) sehingga Gaji Negatif dan Nama Kosong memicu pantulan validasi (*Client state Toast*).
-- **Tailwind v4 @theme Engine**: Pemetaan warna modular *(Ink & Surface)* absolut tanpa kebosanan *Tailwind Config* lawas, dirancang seratus persen kebal gesekan ketika disuntikkan **Shadcn/ui** dan **Lucide React**.
+- **Protokol RBAC (Role-Based Access Control)**: Mengklasifikasikan sesi pengguna ke dalam kasta `SUPER_ADMIN` dan `HR_STAFF`. Rute krusial seperti Penggajian dan Visualisasi Rahasia di-*ghosting* secara paksa dari pengguna level bawah.
+- **Visualisasi Recharts**: Dasbor yang hidup dengan grafik balok dinamis (*Client-rendered*) yang mengkalkulasi beban populasi setiap departemen secara seketika (*Real-time Data Fetching*).
+- **Mesin Presensi (Absensi)**: Tabel log kehadiran dengan indikator lencana (*badge*) absolut, didukung oleh formulir *Server Action* kilat yang divalidasi keandalannya.
+- **Kepatuhan Desain UI/UX (V2 Strict)**: Meninggalkan desain *SaaS* generik, memeluk identitas HRD tulen dengan *Document Row Pattern* pada tabel, pewarnaan kaku `var(--accent)`, Tipografi Monospaced pada data log, dan manipulasi *ClientShell* (Sidebar) yang luwes di resolusi iPad (1024px) hingga Mobile (768px).
+- **Jaring Pengaman Global (Error Boundaries)**: Halaman `error.tsx` dan `not-found.tsx` ter-kustomisasi penuh mencegah bocornya kode *Stack Trace* merah ke layar pengguna jika Database Neon PostgreSQL lumpuh terbakar badai.
+- **Middleware Pengusir (`proxy.ts`)**: Melindungi celah akses anonim di ambang jari lintas batas menggunakan *JWT Session Cookies* (terenkripsi `jose`) berfrekuensi peladen.
 
 ## 🛠️ Tech Stack & Alat Mesin
 
-*   **Core**: Next.js 16 (Turbopack), React 19
+*   **Platform**: Next.js 16 (App Router) + React 19
+*   **Keamanan**: BcryptJS (Hashing) + Jose (JWT Encryption) + Zod (Validation Schema)
 *   **Database ORM**: Prisma Client v6
 *   **Database Cloud**: Neon Serverless PostgreSQL
-*   **Formulir & Mutasi**: React `useFormState` + Zod
-*   **Aestetik UI**: Sistem *Glassmorphism* + Tailwind CSS v4 + Shadcn Primitives
+*   **Estetika UI**: Tailwind CSS v4 + Recharts + Lucide React + Shadcn Primitives (Minified)
 
 ## 🖥️ Uji Coba Prasarana (Local Development)
 
 Proyek ini sangat ringan untuk dipelopori ke komputer lokal. 
 
-1. Klon Repositori ini dan masuk ke wilayah utamanya:
+1. Klon Repositori ini dan lompat ke wilayah utamanya:
    ```bash
    git clone https://github.com/MRKOsius/Manajemen-Karyawan.git
    cd Manajemen-Karyawan
    ```
 
-2. Bangkitkan peladen paket dependencies (Hanya butuh NPM standar):
+2. Bangkitkan peladen paket dependencies:
    ```bash
    npm install
    ```
 
-3. Sinkronisasikan Model Skema Prisma ke *Cloud* Anda sendiri (Ubah `.env` menjadi kunci Rahasia Database Postgres Anda dahulu!):
+3. Modifikasi `.env` menjadi kunci rahasia Database Postgres milik Anda, lalu operasikan *Push* Skema Prisma:
    ```bash
    npx prisma db push
    ```
 
-4. Jalankan mesing *Turbopack* yang gahar ini:
+4. *(Opsional tapi Esensial)* Ubah Role akun Anda menjadi `SUPER_ADMIN` di Prisma Studio:
+   ```bash
+   npx prisma studio
+   ```
+
+5. Jalankan mesin raksasa *Turbopack* ini:
    ```bash
    npm run dev
    ```
@@ -51,4 +59,4 @@ Proyek ini sangat ringan untuk dipelopori ke komputer lokal.
 Buka `http://localhost:3000` dan nikmati interaksi mulusnya!
 
 ---
-*Proyek ini dirancang sebagai bentuk Kulminasi dan Pengujian Analisis Web Level Profesional.*
+*Proyek ini dirancang sebagai bentuk Kulminasi dan Pengujian Analisis Web Fullstack Level Senior.*
