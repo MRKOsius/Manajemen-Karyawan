@@ -68,29 +68,29 @@
 }
 
 @theme inline {
-  --color-canvas: var(--bg-canvas);
-  --color-surface: var(--bg-surface);
-  --color-elevated: var(--bg-elevated);
-  --color-sunken: var(--bg-sunken);
+  --color-canvas: #09090b;
+  --color-surface: #18181b;
+  --color-elevated: #27272a;
+  --color-sunken: #000000;
 
-  --color-ink-primary: var(--ink-primary);
-  --color-ink-secondary: var(--ink-secondary);
-  --color-ink-muted: var(--ink-muted);
-  --color-ink-disabled: var(--ink-disabled);
+  --color-ink-primary: #f8fafc;
+  --color-ink-secondary: #cbd5e1;
+  --color-ink-muted: #94a3b8;
+  --color-ink-disabled: #64748b;
 
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-light: var(--accent-light);
-  --color-accent-text: var(--accent-text);
+  --color-accent: #F59E0B;
+  --color-accent-hover: #D97706;
+  --color-accent-light: #451a03;
+  --color-accent-text: #FDE68A;
 
-  --color-success: var(--success);
-  --color-success-bg: var(--success-bg);
-  --color-danger: var(--danger);
-  --color-danger-bg: var(--danger-bg);
+  --color-success: #4ADE80;
+  --color-success-bg: #14532D;
+  --color-danger: #F87171;
+  --color-danger-bg: #7F1D1D;
 
-  --color-border-default: var(--border-default);
-  --color-border-strong: var(--border-strong);
-  --color-border-focus: var(--border-focus);
+  --color-border-default: #27272a;
+  --color-border-strong: #3f3f46;
+  --color-border-focus: #F59E0B;
 
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
