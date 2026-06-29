@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import ActionDropdown from "../components/ActionDropdown";
 import EmptyState from "../components/EmptyState";

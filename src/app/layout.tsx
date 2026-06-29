@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Inter, JetBrains_Mono, Geist } from "next/font/google";
 import "./globals.css";
 import ClientShell from "./components/ClientShell";
 import { Toaster } from "sonner";
+import { cn } from "@/lib/utils";
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
@@ -10,11 +11,7 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
 });
 
-const inter = Inter({
-  variable: "--font-sans",
-  weight: ["400", "500", "600"],
-  subsets: ["latin"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
@@ -35,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", instrumentSerif.variable, jetbrainsMono.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-screen bg-canvas text-ink-primary font-sans">
         <Toaster 
