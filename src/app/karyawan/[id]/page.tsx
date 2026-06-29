@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
@@ -46,6 +45,7 @@ export default async function DetailKaryawan({ params }: { params: Promise<{ id:
                 </Link>
                 <div className="flex items-center gap-4 mt-6">
                     {karyawan.avatar ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img 
                             src={karyawan.avatar}
                             alt={`Foto ${karyawan.nama}`}

@@ -40,7 +40,7 @@ export default function ActionDropdown({ id, editHref, deleteAction, entityName,
            toast.success(`${entityName} berhasil dihapus`);
            setIsConfirmOpen(false);
         }
-      } catch (err: any) {
+      } catch (err) {
         toast.error(err.message || "Gagal menghubungi server");
       }
     });

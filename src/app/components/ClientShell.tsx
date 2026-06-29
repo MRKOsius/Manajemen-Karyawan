@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import React, { useState } from "react";
 import { Menu } from "lucide-react";
 
-export default function ClientShell({ children, sessionData }: { children: React.ReactNode, sessionData?: any }) {
+export default function ClientShell({ children, sessionData }: { children: React.ReactNode, sessionData?: Record<string, unknown> | null }) {
     const pathname = usePathname();
     const isFullscreenPage = pathname === "/login" || pathname === "/setup";
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

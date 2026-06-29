@@ -37,7 +37,7 @@ async function hapusPermanen(formData: FormData) {
             "public", siMati.avatar);
         try {
             await fs.unlink(alamatFisikPath);
-        } catch (e) {
+        } catch {
             console.log("File tidak ditemukan, mungkin sudah rontok sebelumnya.");
         }
     }

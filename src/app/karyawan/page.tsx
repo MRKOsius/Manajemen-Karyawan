@@ -123,7 +123,6 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                         <tbody>
                             {dataKaryawan.map((karyawan) => {
                                 const formattedEmail = `${karyawan.nama.split(" ")[0].toLowerCase()}@hris.co.id`;
-                                const joinDate = new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }).format(karyawan.createdAt);
 
                                 return (
                                     <tr key={karyawan.id}>
@@ -131,6 +130,7 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                                             <div className="flex items-center gap-3">
                                                 <div className="w-9 h-9 rounded-full bg-elevated border border-border-default overflow-hidden shrink-0 flex items-center justify-center">
                                                     {karyawan.avatar ? (
+                                                        /* eslint-disable-next-line @next/next/no-img-element */
                                                         <img src={karyawan.avatar} alt={`Foto ${karyawan.nama}`} className="w-full h-full object-cover" />
                                                     ) : (
                                                         <span className="text-[12px] font-medium text-ink-secondary">{karyawan.nama.substring(0, 2).toUpperCase()}</span>

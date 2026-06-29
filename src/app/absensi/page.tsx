@@ -1,8 +1,7 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Search, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import EmptyState from "../components/EmptyState";
 import SubmitButton from "../components/SubmitButton";
 import CustomSelect from "../components/CustomSelect";
@@ -27,9 +26,7 @@ async function rekamAbsensi(formData: FormData) {
     revalidatePath("/absensi");
 }
 
-export default async function AbsensiPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-    const params = await searchParams;
-    const kataKunci = params?.q || "";
+export default async function AbsensiPage() {
 
     const dataAbsensi = await prisma.absensi.findMany({
         orderBy: { waktu: 'desc' },
@@ -112,6 +109,7 @@ export default async function AbsensiPage({ searchParams }: { searchParams: Prom
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-elevated border border-border-default overflow-hidden">
                                                 {abs.karyawan.avatar ? (
+                                                    /* eslint-disable-next-line @next/next/no-img-element */
                                                     <img src={abs.karyawan.avatar} alt={abs.karyawan.nama} className="w-full h-full object-cover" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-[10px] font-medium text-ink-secondary">

@@ -21,7 +21,7 @@ async function hapusDepartemen(formData: FormData) {
         
         revalidatePath("/departemen");
         revalidatePath("/");
-    } catch (error: any) {
+    } catch (error) {
         if (error.code === 'P2003') {
             return { error: "Dilarang: Departemen ini masih memiliki Karyawan tersangkut." };
         }

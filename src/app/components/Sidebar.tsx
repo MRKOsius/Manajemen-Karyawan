@@ -11,7 +11,7 @@ const navLinks = [
     { label: "Gaji", href: "/gaji" },
 ];
 
-export default function Sidebar({ sessionData }: { sessionData?: any }) {
+export default function Sidebar({ sessionData }: { sessionData?: Record<string, unknown> | null }) {
     const pathname = usePathname();
 
     return (

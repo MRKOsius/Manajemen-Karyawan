@@ -11,7 +11,7 @@ const encodedKey = new TextEncoder().encode(secretKey);
 /**
  * 1. Fungsi Enkripsi: Mengubah data asli (seperti User ID/Role) menjadi TIKET (JWT) acak
  */
-export async function encrypt(payload: any) {
+export async function encrypt(payload: Record<string, unknown>) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -29,7 +29,7 @@ export async function decrypt(session: string | undefined = '') {
       algorithms: ['HS256'],
     });
     return payload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
