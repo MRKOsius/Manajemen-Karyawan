@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NexHR — Enterprise HRIS Dashboard
 
-## Getting Started
+Sebuah purwarupa Sistem Informasi Manajemen Sumber Daya Manusia (HRIS) kelas premium yang dibangun di atas kerangka kerja mutakhir **Next.js 16 (App Router)**. Proyek ini mendemonstrasikan keahlian arsitektur tingkat lanjut dengan mengintegrasikan sistem basis data persisten, lapisan proteksi otorisasi, dan validasi sisi serambi (*server-side*).
 
-First, run the development server:
+![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
+![Framework](https://img.shields.io/badge/Next.js-16.2.9-black)
+![Database](https://img.shields.io/badge/Database-PostgreSQL%20(Neon)-blue)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Sorotan Fitur Pendekatan Enterprise
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Berbeda dengan proyek *Dashboard* kasual, repositori ini ditopang oleh fondasi keamanan dan pilar keandalan tingkat komersil:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Auth Middleware (`proxy.ts`)**: Melindungi celah akses anonim menggunakan deteksi *Session Cookies* berkecepatan pinggir jaringan (*Edge speed*).
+- **Injeksi Soft-Delete Orto-Grafis**: Algoritma `.delete()` yang telah berevolusi menjadi penyembunyian transparan `isActive: false` (Menjaga relasi Integritas Repositori Riwayat Gaji & Keuangan tetap suci selamanya).
+- **Zod Data Shield**: Skema *Server Actions* dilapisi Zod untuk meregulasi ketat integritas Data Masukan (*Input*) sehingga Gaji Negatif dan Nama Kosong memicu pantulan validasi (*Client state Toast*).
+- **Tailwind v4 @theme Engine**: Pemetaan warna modular *(Ink & Surface)* absolut tanpa kebosanan *Tailwind Config* lawas, dirancang seratus persen kebal gesekan ketika disuntikkan **Shadcn/ui** dan **Lucide React**.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack & Alat Mesin
 
-## Learn More
+*   **Core**: Next.js 16 (Turbopack), React 19
+*   **Database ORM**: Prisma Client v6
+*   **Database Cloud**: Neon Serverless PostgreSQL
+*   **Formulir & Mutasi**: React `useFormState` + Zod
+*   **Aestetik UI**: Sistem *Glassmorphism* + Tailwind CSS v4 + Shadcn Primitives
 
-To learn more about Next.js, take a look at the following resources:
+## 🖥️ Uji Coba Prasarana (Local Development)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Proyek ini sangat ringan untuk dipelopori ke komputer lokal. 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Klon Repositori ini dan masuk ke wilayah utamanya:
+   ```bash
+   git clone https://github.com/MRKOsius/Manajemen-Karyawan.git
+   cd Manajemen-Karyawan
+   ```
 
-## Deploy on Vercel
+2. Bangkitkan peladen paket dependencies (Hanya butuh NPM standar):
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Sinkronisasikan Model Skema Prisma ke *Cloud* Anda sendiri (Ubah `.env` menjadi kunci Rahasia Database Postgres Anda dahulu!):
+   ```bash
+   npx prisma db push
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Jalankan mesing *Turbopack* yang gahar ini:
+   ```bash
+   npm run dev
+   ```
+
+Buka `http://localhost:3000` dan nikmati interaksi mulusnya!
+
+---
+*Proyek ini dirancang sebagai bentuk Kulminasi dan Pengujian Analisis Web Level Profesional.*
