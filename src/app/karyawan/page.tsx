@@ -92,7 +92,7 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                             </Link>
         
                             <a
-                                href="/api/export"
+                                href="/api/export?type=karyawan"
                                 target="_blank"
                                 className="bg-transparent hover:bg-elevated text-ink-secondary hover:text-ink-primary text-[13px] font-medium py-2 px-4 border border-border-default rounded-[8px] whitespace-nowrap transition-colors focus:outline-none flex items-center gap-2"
                             >

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import SubmitButton from "@/app/components/SubmitButton";
 
 export default async function DetailDepartemen({ params }: { params: Promise<{ id: string }> }) {
@@ -14,6 +15,9 @@ export default async function DetailDepartemen({ params }: { params: Promise<{ i
 
     async function updateData(formData: FormData) {
         "use server";
+        const session = await getSession();
+        if (session?.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
         const nama = formData.get("nama") as string;
         const lokasi = formData.get("lokasi") as string;
 

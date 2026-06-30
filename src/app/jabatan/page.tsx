@@ -14,6 +14,9 @@ export const metadata: Metadata = {
 
 async function hapusJabatan(formData: FormData) {
     "use server";
+    const session = await getSession();
+    if (session?.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
     const id = formData.get("id") as string;
     await prisma.jabatan.update({ where: { id }, data: { isActive: false } });
     revalidatePath("/jabatan");

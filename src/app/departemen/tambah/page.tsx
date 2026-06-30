@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import SubmitButton from "@/app/components/SubmitButton";
 
 export default async function TambahDepartemenPage() {
     async function simpanData(formData: FormData) {
         "use server";
+        const session = await getSession();
+        if (session?.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
 
         const nama = formData.get("nama") as string;
         const lokasi = formData.get("lokasi") as string;

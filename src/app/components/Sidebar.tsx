@@ -9,6 +9,7 @@ const navLinks = [
     { label: "Departemen", href: "/departemen" },
     { label: "Absensi", href: "/absensi" },
     { label: "Gaji", href: "/gaji" },
+    { label: "Kelola Admin", href: "/admin" },
 ];
 
 export default function Sidebar({ sessionData }: { sessionData?: Record<string, unknown> | null }) {
@@ -27,8 +28,8 @@ export default function Sidebar({ sessionData }: { sessionData?: Record<string, 
             {/* Navigation */}
             <nav className="flex-1 px-4 space-y-1" aria-label="Navigasi Utama">
                 {navLinks.map((link) => {
-                    // RBAC: Hanya SUPER_ADMIN yang bisa melihat tab Gaji
-                    if (link.label === "Gaji" && sessionData?.role !== "SUPER_ADMIN") {
+                    // RBAC: Hanya SUPER_ADMIN yang bisa melihat tab khusus
+                    if ((link.label === "Gaji" || link.label === "Kelola Admin") && sessionData?.role !== "SUPER_ADMIN") {
                         return null;
                     }
 

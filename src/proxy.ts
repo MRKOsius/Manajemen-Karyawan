@@ -3,7 +3,7 @@ import { decrypt } from "@/lib/session";
 
 // 1. Tentukan rute-rute mana saja yang HARUS login untuk bisa masuk
 // Kita pakai awalan supaya rute seperti /karyawan/tambah juga ikut aman.
-const protectedPrefixes = ['/karyawan', '/departemen', '/jabatan', '/absensi', '/gaji']; 
+const protectedPrefixes = ['/karyawan', '/departemen', '/jabatan', '/absensi', '/gaji', '/admin']; 
 const publicRoutes = ['/login'];
 
 export async function proxy(req: NextRequest) {
@@ -40,12 +40,21 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.nextUrl)); 
   }
 
-  // Jika mencoba meretas untuk memodifikasi struktur data (Karyawan, Departemen, Jabatan)
-  const structuralBases = ['/karyawan', '/departemen', '/jabatan'];
+  if (path.startsWith('/admin') && !isSuperAdmin) {
+    // Memblokir paksa akses modul Kelola User ke halaman utama
+    return NextResponse.redirect(new URL('/', req.nextUrl)); 
+  }
+
+  // Jika mencoba meretas untuk memodifikasi struktur data (Karyawan, Departemen, Jabatan, Admin)
+  const structuralBases = ['/karyawan', '/departemen', '/jabatan', '/admin'];
   if (!isSuperAdmin) {
     for (const base of structuralBases) {
       if (path.startsWith(base + "/")) { 
           // Jika URL memiliki anak jalur miring (cth: /karyawan/tambah, /jabatan/nonaktif, dll), tendang kembali ke daftar tabel
+          return NextResponse.redirect(new URL(base, req.nextUrl));
+      }
+      if (path === base && req.method !== 'GET') {
+          // Blokir akses request mutasi (POST/PUT/DELETE via Server Action) pada basis target
           return NextResponse.redirect(new URL(base, req.nextUrl));
       }
     }

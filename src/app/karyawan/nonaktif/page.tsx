@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import EmptyState from "@/app/components/EmptyState";
 import { promises as fs } from "fs";
 import path from "path";
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 
 async function pulihkanKaryawan(formData: FormData) {
     "use server";
+    const session = await getSession();
+    if (session?.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
     const id = formData.get("id") as string;
 
     await prisma.karyawan.update({ where: { id: id }, data: { isActive: true } });
@@ -24,6 +28,9 @@ async function pulihkanKaryawan(formData: FormData) {
 
 async function hapusPermanen(formData: FormData) {
     "use server";
+    const session = await getSession();
+    if (session?.role !== "SUPER_ADMIN") throw new Error("Unauthorized");
+
     const id = formData.get("id") as string;
 
     const siMati = await prisma.karyawan.findUnique({

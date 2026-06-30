@@ -1,58 +1,19 @@
-# NexHR — Enterprise HRIS Dashboard (V2)
+# NexHR — Enterprise HRIS Dashboard
 
-Sebuah Sistem Informasi Manajemen Sumber Daya Manusia (HRIS) kelas premium yang dibangun di atas kerangka kerja mutakhir **Next.js 16 (App Router)**. Proyek ini mendemonstrasikan keahlian arsitektur *Fullstack* tingkat lanjut dengan mengintegrasikan sistem basis data persisten, lapisan proteksi otorisasi, arsitektur UI/UX kaku (Figma V2), dan validasi sisi peladen (*server-side*).
+NexHR adalah Sistem Informasi Manajemen Sumber Daya Manusia (HRIS) yang dirancang untuk membantu perusahaan menengah hingga besar dalam mengelola data karyawan, struktur posisi organisasi, departemen, serta data kehadiran harian secara tersentralisasi.
 
-![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
-![Framework](https://img.shields.io/badge/Next.js-16.2.9-black)
-![Database](https://img.shields.io/badge/Database-PostgreSQL%20(Neon)-blue)
+Fokus utama aplikasi ini adalah kejelasan informasi dan keamanan data operasional perusahaan. NexHR memisahkan akses pengguna (Role-Based Access Control) secara ketat untuk memastikan bahwa staf operasional HR dapat melakukan tugas hariannya, sementara kendali penuh terhadap informasi sensitif dan pengaturan sistem hanya dapat dilakukan oleh Super Admin.
 
-## 🌟 Sorotan Fitur Enterprise (Ekspansi V2)
+## Fitur Utama Aplikasi
 
-Berbeda dengan proyek *Dashboard* kasual, repositori ini ditopang oleh fondasi keamanan dan pilar keandalan tingkat komersil:
+- **Manajemen Karyawan (Terpusat)**: Mengelola profil, status aktif, divisi, dan wewenang (jabatan) setiap karyawan dari satu antarmuka terpadu.
+- **Struktur Organisasi**: Mengelola referensi Jabatan dan unit Departemen untuk menyokong kebutuhan hierarki manajerial perusahaan.
+- **Sistem Absensi**: Buku catatan digital untuk merekam riwayat kehadiran harian karyawan.
+- **Otoritas Berlapis (RBAC)**: Pemisahan wewenang yang tegas antara HR Staff (mendapat akses terbatas hanya untuk modul operasional harian) dan Super Admin (kontrol penuh atas modul finansial, gaji karyawan, dan konfigurasi sistem admin).
+- **Arsip Aman (Soft-Delete)**: Data karyawan yang dihapus tidak benar-benar hilang dari database, melainkan dipindahkan dengan aman ke ruang arsip khusus. Pengelola berwenang memiliki opsi untuk memulihkan data tersebut atau memusnahkannya secara permanen.
+- **Ekspor Laporan**: Fitur pengunduhan laporan data secara dinamis dalam bentuk berkas CSV yang dienkapsulasi sesuai batas wewenang pengguna (misalnya, data kolom gaji pokok diblokir ketika yang mengunduh adalah Staf biasa).
 
-- **Protokol RBAC (Role-Based Access Control)**: Mengklasifikasikan sesi pengguna ke dalam kasta `SUPER_ADMIN` dan `HR_STAFF`. Rute krusial seperti Penggajian dan Visualisasi Rahasia di-*ghosting* secara paksa dari pengguna level bawah.
-- **Visualisasi Recharts**: Dasbor yang hidup dengan grafik balok dinamis (*Client-rendered*) yang mengkalkulasi beban populasi setiap departemen secara seketika (*Real-time Data Fetching*).
-- **Mesin Presensi (Absensi)**: Tabel log kehadiran dengan indikator lencana (*badge*) absolut, didukung oleh formulir *Server Action* kilat yang divalidasi keandalannya.
-- **Resolusi "Bad UI" & Adaptasi Arsitektur V2**: Seluruh jejak desain "*SaaS/Dribbble Slop*" (seperti shadow berlebih, rounded borders raksasa, dan teks puitis) telah dihilangkan total. Mengadopsi tata ruang asimetris kelas *Enterprise* (Grid 70:30) dipadukan dengan desain *Document Row Pattern* yang kaku dan padat data.
-- **Jaring Pengaman Global (Error Boundaries)**: Halaman `error.tsx` dan `not-found.tsx` ter-kustomisasi penuh mencegah bocornya kode *Stack Trace* merah ke layar pengguna jika Database Neon PostgreSQL lumpuh terbakar badai.
-- **Middleware Pengusir (`proxy.ts`)**: Melindungi celah akses anonim di ambang jari lintas batas menggunakan *JWT Session Cookies* (terenkripsi `jose`) berfrekuensi peladen.
+## Tautan Aplikasi Resmi
 
-## 🛠️ Tech Stack & Alat Mesin
-
-*   **Platform**: Next.js 16 (App Router) + React 19
-*   **Keamanan**: BcryptJS (Hashing) + Jose (JWT Encryption) + Zod (Validation Schema)
-*   **Database ORM**: Prisma Client v6
-*   **Database Cloud**: Neon Serverless PostgreSQL
-*   **Estetika UI**: Tailwind CSS v4 + Recharts + Lucide React + Shadcn Primitives (Minified)
-
-## 🖥️ Uji Coba Prasarana (Local Development)
-
-Proyek ini sangat ringan untuk dipelopori ke komputer lokal. 
-
-1. Klon Repositori ini dan lompat ke wilayah utamanya:
-   ```bash
-   git clone https://github.com/MRKOsius/Manajemen-Karyawan.git
-   cd Manajemen-Karyawan
-   ```
-
-2. Bangkitkan peladen paket dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Modifikasi `.env` menjadi kunci rahasia Database Postgres milik Anda, lalu operasikan *Push* Skema Prisma:
-   ```bash
-   npx prisma db push
-   ```
-
-4. *(Opsional tapi Esensial)* Ubah Role akun Anda menjadi `SUPER_ADMIN` di Prisma Studio:
-   ```bash
-   npx prisma studio
-   ```
-
-5. Jalankan mesin raksasa *Turbopack* ini:
-   ```bash
-   npm run dev
-   ```
-
-Buka `https://manajemen-karyawan-phi.vercel.app/` dan nikmati interaksi mulusnya!
+Aplikasi ini dapat diakses dan diujicoba secara langsung melalui tautan produksi berikut:
+**[Buka Server Publik NexHR](https://manajemen-karyawan-phi.vercel.app/)**
