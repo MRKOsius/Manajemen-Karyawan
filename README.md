@@ -5,7 +5,6 @@ Sebuah Sistem Informasi Manajemen Sumber Daya Manusia (HRIS) kelas premium yang 
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
 ![Framework](https://img.shields.io/badge/Next.js-16.2.9-black)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL%20(Neon)-blue)
-![UI](https://img.shields.io/badge/UI-V2%20Design%20System-orange)
 
 ## 🌟 Sorotan Fitur Enterprise (Ekspansi V2)
 
@@ -56,7 +55,4 @@ Proyek ini sangat ringan untuk dipelopori ke komputer lokal.
    npm run dev
    ```
 
-Buka `http://localhost:3000` dan nikmati interaksi mulusnya!
-
----
-*Proyek ini dirancang sebagai bentuk Kulminasi dan Pengujian Analisis Web Fullstack Level Senior.*
+Buka `https://manajemen-karyawan-phi.vercel.app/` dan nikmati interaksi mulusnya!
