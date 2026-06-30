@@ -45,15 +45,15 @@ export default async function GajiPage() {
         <section className="px-10 py-10 max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-[18px] font-semibold text-ink-primary">Gaji & Remunerasi</h1>
-                    <p className="font-mono text-[13px] text-ink-muted mt-1">Manajemen distribusi dan histori pencatatan keuangan karyawan</p>
+                    <h1 className="text-[18px] font-semibold text-ink-primary">Gaji & Payroll</h1>
+                    <p className="font-mono text-[13px] text-ink-muted mt-1">Sistem manajemen dan histori pembayaran gaji karyawan.</p>
                 </div>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8 items-start">
+            <div className="grid lg:grid-cols-5 gap-8 items-start">
                 
-                {/* Kolom Kiri: Daftar Eksekusi */}
-                <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
+                {/* Kolom Kiri: Daftar Eksekusi (Porsinya lebih ringkas/Sidebar Style) */}
+                <div className="lg:col-span-2 bg-surface border border-border-default rounded-[8px] overflow-hidden">
                     <div className="px-6 py-4 border-b border-border-default">
                         <h2 className="text-[14px] font-medium text-ink-primary">Pending Pembayaran</h2>
                     </div>
@@ -88,8 +88,8 @@ export default async function GajiPage() {
                     )}
                 </div>
 
-                {/* Kolom Kanan: Histori Transaksi */}
-                <div className="bg-surface border border-border-default rounded-[8px] flex flex-col max-h-[660px]">
+                {/* Kolom Kanan: Histori Transaksi (Area Utama Lebih Lebar) */}
+                <div className="lg:col-span-3 bg-surface border border-border-default rounded-[8px] flex flex-col max-h-[660px]">
                     <div className="px-6 py-4 border-b border-border-default shrink-0">
                         <h2 className="text-[14px] font-medium text-ink-primary">Log Transaksi Berhasil</h2>
                     </div>
@@ -131,7 +131,7 @@ export default async function GajiPage() {
                     ) : (
                         <div className="p-8">
                             <div className="border border-dashed border-border-default rounded-[8px] p-10 text-center bg-canvas">
-                                <p className="text-[13px] text-ink-secondary">Log riwayat penggajian masih bersih.</p>
+                                <p className="text-[13px] text-ink-secondary">Belum ditemukannya histori pencairan sama sekali.</p>
                             </div>
                         </div>
                     )}

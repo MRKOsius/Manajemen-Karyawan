@@ -49,34 +49,16 @@ export default async function AbsensiPage() {
 
     return (
         <section className="px-10 py-10 max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-8">
-                <div>
-                    <h1 className="text-[18px] font-semibold text-ink-primary">Rekam Kehadiran</h1>
-                    <p className="text-[13px] text-ink-muted mt-1 max-w-md">Catat waktu kedatangan dan kepulangan karyawan. Integrasikan perangkat keras (*Fingerprint/RFID*) untuk pencatatan otomatis di masa depan.</p>
-                </div>
-
-                <form action={rekamAbsensi} className="bg-surface border border-border-default rounded-[8px] p-5 w-full md:w-auto min-w-[340px]">
-                    <h2 className="text-[12px] font-medium text-ink-primary mb-4 flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-accent" /> Setor Presensi Manual
-                    </h2>
-                    <div className="space-y-4 mb-5">
-                        <CustomSelect 
-                            name="karyawanId"
-                            options={opsiKaryawan}
-                            placeholder="Pilih Karyawan..."
-                        />
-                        <CustomSelect 
-                            name="tipe"
-                            options={tipeAbsen}
-                            placeholder="Tipe Presensi..."
-                        />
-                    </div>
-                    <SubmitButton text="Simpan Waktu" />
-                </form>
+            <div className="mb-8">
+                <h1 className="text-[18px] font-semibold text-ink-primary">Absensi</h1>
+                <p className="text-[13px] text-ink-muted mt-1 max-w-md">Catat riwayat datang dan pulang secara manual atau pantau rekaman sistem.</p>
             </div>
 
+            <div className="grid lg:grid-cols-3 gap-8 items-start">
+                {/* Tabel Histori (Lebar Dominan 2/3) */}
+                <div className="lg:col-span-2">
             {dataAbsensi.length > 0 ? (
-                <div className="bg-surface border border-border-default rounded-[8px]">
+                <div className="bg-surface border border-border-default rounded-[8px] overflow-hidden">
                     <table className="w-full text-left text-sm whitespace-nowrap">
                         <thead>
                             <tr>
@@ -134,12 +116,36 @@ export default async function AbsensiPage() {
                 </div>
             ) : (
                 <EmptyState 
-                    title="Log presensi kosong" 
-                    body="Mesin pencatat belum menerima pantulan aktivitas kehadiran satupun hari ini."
-                    action="Setor Absensi Pertama"
+                    title="Belum ada catatan presensi" 
+                    body="Daftar rekam log absen karyawan akan terlihat di sini nantinya."
+                    action="Coba Catat Presensi"
                     actionHref="/absensi"
                 />
             )}
+                </div>
+
+                {/* Panel Formulir Aksi (Lebar Ringkas 1/3) */}
+                <div className="lg:col-span-1">
+                    <form action={rekamAbsensi} className="bg-surface border border-border-default rounded-[8px] p-6 w-full sticky top-8 shadow-sm">
+                        <h2 className="text-[14px] font-medium text-ink-primary mb-5 flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-accent" /> Catat Absensi Manual
+                        </h2>
+                        <div className="space-y-4 mb-6">
+                            <CustomSelect 
+                                name="karyawanId"
+                                options={opsiKaryawan}
+                                placeholder="Pilih Karyawan..."
+                            />
+                            <CustomSelect 
+                                name="tipe"
+                                options={tipeAbsen}
+                                placeholder="Tipe Absen..."
+                            />
+                        </div>
+                        <SubmitButton text="Rekam Kehadiran" />
+                    </form>
+                </div>
+            </div>
         </section>
     );
 }

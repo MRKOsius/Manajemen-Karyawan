@@ -32,10 +32,23 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.nextUrl)); // Lemparkan ke dalam Dashboard
   }
 
-  // Kasus C: Filter RBAC (Restriksi Halaman Gaji)
-  if (path.startsWith('/gaji') && session?.role !== "SUPER_ADMIN") {
-    // Jika user biasa mencoba menyusup ke halaman Finansial Gaji, kembalikan ke Beranda!
+  // Kasus C: Filter RBAC (Hak Akses Tingkat Lanjut)
+  const isSuperAdmin = session?.role === "SUPER_ADMIN";
+
+  if (path.startsWith('/gaji') && !isSuperAdmin) {
+    // Memblokir paksa akses seluruh modul finansial Gaji ke halaman utama
     return NextResponse.redirect(new URL('/', req.nextUrl)); 
+  }
+
+  // Jika mencoba meretas untuk memodifikasi struktur data (Karyawan, Departemen, Jabatan)
+  const structuralBases = ['/karyawan', '/departemen', '/jabatan'];
+  if (!isSuperAdmin) {
+    for (const base of structuralBases) {
+      if (path.startsWith(base + "/")) { 
+          // Jika URL memiliki anak jalur miring (cth: /karyawan/tambah, /jabatan/nonaktif, dll), tendang kembali ke daftar tabel
+          return NextResponse.redirect(new URL(base, req.nextUrl));
+      }
+    }
   }
 
   // Izinkan lewat jika aman

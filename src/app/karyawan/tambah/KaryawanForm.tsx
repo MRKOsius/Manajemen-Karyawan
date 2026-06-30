@@ -35,12 +35,12 @@ export default function KaryawanForm({ pilihanJabatan, pilihanDepartemen }: { pi
                                 className="w-full text-[13px] text-ink-primary file:mr-4 file:py-2 file:px-4 file:border file:border-border-default file:rounded-[8px] file:bg-surface file:text-ink-secondary file:font-medium hover:file:bg-elevated file:transition-colors focus:outline-none cursor-pointer" />
                             <label htmlFor="nama" className="text-[13px] font-medium text-ink-primary mb-1">Nama Lengkap</label>
                             <input id="nama" type="text" name="nama" required className={`hris-input ${state?.error?.nama ? 'border-danger/50' : ''}`} placeholder="Masukkan nama lengkap" />
-                            {state?.error?.nama && <p className="text-[11px] text-danger mt-1">{state.error.nama[0]}</p>}
+                            {state?.error?.nama && <p role="alert" className="text-[11px] text-danger mt-1">{state.error.nama[0]}</p>}
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor="gaji" className="text-[13px] font-medium text-ink-primary mb-1">Gaji Dasar (IDR)</label>
                             <input id="gaji" type="number" name="gaji" required className={`hris-input ${state?.error?.gaji ? 'border-danger/50' : ''}`} placeholder="Masukkan nominal gaji" />
-                            {state?.error?.gaji && <p className="text-[11px] text-danger mt-1">{state.error.gaji[0]}</p>}
+                            {state?.error?.gaji && <p role="alert" className="text-[11px] text-danger mt-1">{state.error.gaji[0]}</p>}
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ export default function KaryawanForm({ pilihanJabatan, pilihanDepartemen }: { pi
                                 placeholder="-- Pilih Jabatan --" 
                                 error={!!state?.error?.jabatanId}
                             />
-                            {state?.error?.jabatanId && <p className="text-[11px] text-danger mt-1">{state.error.jabatanId[0]}</p>}
+                            {state?.error?.jabatanId && <p role="alert" className="text-[11px] text-danger mt-1">{state.error.jabatanId[0]}</p>}
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor="departemenId" className="text-[13px] font-medium text-ink-primary mb-1">Departemen</label>
@@ -67,7 +67,7 @@ export default function KaryawanForm({ pilihanJabatan, pilihanDepartemen }: { pi
                                 placeholder="-- Pilih Departemen --" 
                                 error={!!state?.error?.departemenId}
                             />
-                            {state?.error?.departemenId && <p className="text-[11px] text-danger mt-1">{state.error.departemenId[0]}</p>}
+                            {state?.error?.departemenId && <p role="alert" className="text-[11px] text-danger mt-1">{state.error.departemenId[0]}</p>}
                         </div>
                     </div>
                 </div>

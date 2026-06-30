@@ -14,7 +14,7 @@ Berbeda dengan proyek *Dashboard* kasual, repositori ini ditopang oleh fondasi k
 - **Protokol RBAC (Role-Based Access Control)**: Mengklasifikasikan sesi pengguna ke dalam kasta `SUPER_ADMIN` dan `HR_STAFF`. Rute krusial seperti Penggajian dan Visualisasi Rahasia di-*ghosting* secara paksa dari pengguna level bawah.
 - **Visualisasi Recharts**: Dasbor yang hidup dengan grafik balok dinamis (*Client-rendered*) yang mengkalkulasi beban populasi setiap departemen secara seketika (*Real-time Data Fetching*).
 - **Mesin Presensi (Absensi)**: Tabel log kehadiran dengan indikator lencana (*badge*) absolut, didukung oleh formulir *Server Action* kilat yang divalidasi keandalannya.
-- **Kepatuhan Desain UI/UX (V2 Strict)**: Meninggalkan desain *SaaS* generik, memeluk identitas HRD tulen dengan *Document Row Pattern* pada tabel, pewarnaan kaku `var(--accent)`, Tipografi Monospaced pada data log, dan manipulasi *ClientShell* (Sidebar) yang luwes di resolusi iPad (1024px) hingga Mobile (768px).
+- **Resolusi "Bad UI" & Adaptasi Arsitektur V2**: Seluruh jejak desain "*SaaS/Dribbble Slop*" (seperti shadow berlebih, rounded borders raksasa, dan teks puitis) telah dihilangkan total. Mengadopsi tata ruang asimetris kelas *Enterprise* (Grid 70:30) dipadukan dengan desain *Document Row Pattern* yang kaku dan padat data.
 - **Jaring Pengaman Global (Error Boundaries)**: Halaman `error.tsx` dan `not-found.tsx` ter-kustomisasi penuh mencegah bocornya kode *Stack Trace* merah ke layar pengguna jika Database Neon PostgreSQL lumpuh terbakar badai.
 - **Middleware Pengusir (`proxy.ts`)**: Melindungi celah akses anonim di ambang jari lintas batas menggunakan *JWT Session Cookies* (terenkripsi `jose`) berfrekuensi peladen.
 

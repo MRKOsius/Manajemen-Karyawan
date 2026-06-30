@@ -49,7 +49,7 @@ export default function LoginForm({ action }: { action: (formData: FormData) => 
 
             <Button 
                 type="submit" 
-                className="w-full mt-4 bg-accent text-white hover:bg-accent-hover font-medium py-6 text-[14px] rounded-[6px]"
+                className="w-full mt-4 bg-accent text-surface hover:bg-accent-hover font-medium py-6 text-[14px] rounded-[6px]"
             >
                 Masuk ke Dashboard
             </Button>

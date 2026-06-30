@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import { getSession } from "@/lib/session";
 import ActionDropdown from "../components/ActionDropdown";
 import EmptyState from "../components/EmptyState";
 
@@ -22,6 +23,9 @@ async function hapusJabatan(formData: FormData) {
 export default async function JabatanPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
     const params = await searchParams;
     const kataKunci = params?.q || "";
+    
+    const session = await getSession();
+    const isSuperAdmin = session?.role === 'SUPER_ADMIN';
     
     const dataJabatan = await prisma.jabatan.findMany({
         where: {
@@ -56,12 +60,14 @@ export default async function JabatanPage({ searchParams }: { searchParams: Prom
                         )}
                     </form>
                     
-                    <Link 
-                        href="/jabatan/tambah" 
-                        className="bg-accent hover:bg-accent-hover text-white text-[13px] font-medium py-2 px-4 rounded-[6px] whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
-                    >
-                        + Tambah Jabatan
-                    </Link>
+                    {isSuperAdmin && (
+                        <Link 
+                            href="/jabatan/tambah" 
+                            className="bg-accent hover:bg-accent-hover text-surface text-[13px] font-medium py-2 px-4 rounded-[6px] whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
+                        >
+                            + Tambah Jabatan
+                        </Link>
+                    )}
                 </div>
             </div>
 
@@ -76,9 +82,11 @@ export default async function JabatanPage({ searchParams }: { searchParams: Prom
                                 <th scope="col" className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-48">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-24">
-                                    Opsi
-                                </th>
+                                {isSuperAdmin && (
+                                    <th scope="col" className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-24">
+                                        Opsi
+                                    </th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -98,15 +106,17 @@ export default async function JabatanPage({ searchParams }: { searchParams: Prom
                                            <span aria-hidden="true" className="text-[10px]">●</span> Aktif
                                        </span>
                                     </td>
-                                    <td className="px-6 py-3 text-right">
-                                        <ActionDropdown 
-                                            id={jabatan.id} 
-                                            entityName={jabatan.nama}
-                                            entityType="Jabatan"
-                                            editHref={`/jabatan/${jabatan.id}`}
-                                            deleteAction={hapusJabatan}
-                                        />
-                                    </td>
+                                    {isSuperAdmin && (
+                                        <td className="px-6 py-3 text-right">
+                                            <ActionDropdown 
+                                                id={jabatan.id} 
+                                                entityName={jabatan.nama}
+                                                entityType="Jabatan"
+                                                editHref={`/jabatan/${jabatan.id}`}
+                                                deleteAction={hapusJabatan}
+                                            />
+                                        </td>
+                                    )}
                                 </tr>
                                 )
                             })}
@@ -115,8 +125,8 @@ export default async function JabatanPage({ searchParams }: { searchParams: Prom
                 </div>
             ) : (
                 <EmptyState 
-                    title="Tidak ada referensi jabatan" 
-                    body="Pastikan minimal ada satu jabatan yang diset sebelum mengisi penempatan karyawan."
+                    title="Belum ada referensi jabatan" 
+                    body="Pastikan minimal ada satu struktur set sebelum Anda mendaftarkan karyawan baru."
                     action="Tambah Jabatan"
                     actionHref="/jabatan/tambah"
                 />

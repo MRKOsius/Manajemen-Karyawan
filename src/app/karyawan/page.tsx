@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Search, Download, Archive } from "lucide-react";
+import { getSession } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import ActionDropdown from "../components/ActionDropdown";
 import EmptyState from "../components/EmptyState";
@@ -21,6 +22,9 @@ async function hapusKaryawan(formData: FormData) {
 export default async function KaryawanPage({ searchParams }: { searchParams: Promise<{ q?: string, page?: string }> }) {
     const params = await searchParams;
     const kataKunci = params?.q || "";
+
+    const session = await getSession();
+    const isSuperAdmin = session?.role === 'SUPER_ADMIN';
 
     // Konfigurasi Paginasi
     const PAGE_SIZE = 10;
@@ -78,29 +82,33 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                         )}
                     </form>
 
-                    <Link
-                        href="/karyawan/tambah"
-                        className="bg-accent hover:bg-accent-hover text-white text-[13px] font-medium py-2 px-4 rounded-[6px] whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
-                    >
-                        + Tambah Karyawan
-                    </Link>
-
-                    <a
-                        href="/api/export"
-                        target="_blank"
-                        className="bg-transparent hover:bg-elevated text-ink-secondary hover:text-ink-primary text-[13px] font-medium py-2 px-4 border border-border-default rounded-[8px] whitespace-nowrap transition-colors focus:outline-none flex items-center gap-2"
-                    >
-                        <Download className="w-4 h-4" />
-                        Ekspor ke Excel
-                    </a>
-
-                    <Link
-                        href="/karyawan/nonaktif"
-                        className="bg-transparent hover:bg-elevated text-ink-secondary hover:text-ink-primary text-[13px] font-medium py-2 px-4 border border-border-default rounded-[8px] whitespace-nowrap transition-colors focus:outline-none flex items-center gap-2"
-                    >
-                        <Archive className="w-4 h-4" />
-                        Lihat Arsip
-                    </Link>
+                    {isSuperAdmin && (
+                        <>
+                            <Link
+                                href="/karyawan/tambah"
+                                className="bg-accent hover:bg-accent-hover text-surface text-[13px] font-medium py-2 px-4 rounded-[6px] whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
+                            >
+                                + Tambah Karyawan
+                            </Link>
+        
+                            <a
+                                href="/api/export"
+                                target="_blank"
+                                className="bg-transparent hover:bg-elevated text-ink-secondary hover:text-ink-primary text-[13px] font-medium py-2 px-4 border border-border-default rounded-[8px] whitespace-nowrap transition-colors focus:outline-none flex items-center gap-2"
+                            >
+                                <Download className="w-4 h-4" />
+                                Ekspor ke Excel
+                            </a>
+        
+                            <Link
+                                href="/karyawan/nonaktif"
+                                className="bg-transparent hover:bg-elevated text-ink-secondary hover:text-ink-primary text-[13px] font-medium py-2 px-4 border border-border-default rounded-[8px] whitespace-nowrap transition-colors focus:outline-none flex items-center gap-2"
+                            >
+                                <Archive className="w-4 h-4" />
+                                Lihat Arsip
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -115,9 +123,11 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                                 <th scope="col" className="px-6 py-3 text-[11px] font-medium uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-48">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-24">
-                                    Opsi
-                                </th>
+                                {isSuperAdmin && (
+                                    <th scope="col" className="px-6 py-3 text-[11px] font-medium text-right uppercase tracking-[0.06em] text-ink-muted border-b border-border-strong w-24">
+                                        Opsi
+                                    </th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -149,15 +159,17 @@ export default async function KaryawanPage({ searchParams }: { searchParams: Pro
                                                 <span aria-hidden="true" className="text-[10px]">●</span> Aktif
                                             </span>
                                         </td>
-                                        <td className="px-6 py-3 text-right">
-                                            <ActionDropdown
-                                                id={karyawan.id}
-                                                entityName={karyawan.nama}
-                                                entityType="Karyawan"
-                                                editHref={`/karyawan/${karyawan.id}`}
-                                                deleteAction={hapusKaryawan}
-                                            />
-                                        </td>
+                                        {isSuperAdmin && (
+                                            <td className="px-6 py-3 text-right">
+                                                <ActionDropdown
+                                                    id={karyawan.id}
+                                                    entityName={karyawan.nama}
+                                                    entityType="Karyawan"
+                                                    editHref={`/karyawan/${karyawan.id}`}
+                                                    deleteAction={hapusKaryawan}
+                                                />
+                                            </td>
+                                        )}
                                     </tr>
                                 )
                             })}
