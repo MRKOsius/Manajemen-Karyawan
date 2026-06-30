@@ -17,11 +17,11 @@ export default function Sidebar({ sessionData }: { sessionData?: Record<string, 
 
     return (
         <aside className="fixed inset-y-0 left-0 w-full bg-surface border-r border-border-default flex flex-col pt-6 z-10 transition-colors overflow-hidden">
-            {/* Logo */}
             <div className="px-6 mb-8 flex justify-center xl:justify-start">
-                <Link href="/" className="font-serif text-[18px] text-accent font-bold tracking-wide">
-                    <span className="lg:hidden xl:inline">HRIS</span>
-                    <span className="hidden lg:inline xl:hidden">H</span>
+                <Link href="/" className="font-sans text-[18px] text-accent font-black tracking-tight flex items-center gap-0.5">
+                    <span className="lg:hidden xl:inline">NexHR</span>
+                    <span className="hidden lg:inline xl:hidden">Nx</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 lg:hidden xl:block"></span>
                 </Link>
             </div>
 

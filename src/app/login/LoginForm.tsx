@@ -55,7 +55,7 @@ export default function LoginForm({ action }: { action: (formData: FormData) => 
             </Button>
             
             <p className="text-center text-[11px] text-ink-muted mt-4">
-                HRIS Admin v1.0
+                NexHR v1.0
             </p>
         </form>
     )

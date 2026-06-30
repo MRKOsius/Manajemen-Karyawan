@@ -38,9 +38,9 @@ export default function LoginPage() {
                         <Container strokeWidth={1.5} size={24} />
                     </div>
 
-                    <p className="font-sans text-[11px] font-semibold text-accent tracking-[0.15em] uppercase mb-3">HRIS Admin Intranet</p>
-                    <h1 className="font-serif text-[36px] text-ink-primary leading-[1.05] tracking-tight mb-8">
-                        Sistem Manajemen <br/> Karyawan.
+                    <p className="font-sans text-[11px] font-semibold text-accent tracking-[0.15em] uppercase mb-3">NEXHR INTRANET</p>
+                    <h1 className="font-serif text-[32px] text-ink-primary leading-tight font-medium">
+                        Portal Manajemen<br />Sumber Daya
                     </h1>
                     <hr className="border-t border-border-default mb-8" />
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, JetBrains_Mono, Geist } from "next/font/google";
+import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import ClientShell from "./components/ClientShell";
 import { Toaster } from "sonner";
@@ -12,7 +12,10 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
 });
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
@@ -21,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HRIS Admin — Sistem Manajemen Karyawan",
+  title: "NexHR — Sistem Manajemen Karyawan",
   description: "Portal manajemen data karyawan, jabatan, departemen, dan payroll.",
 };
 
@@ -35,7 +38,7 @@ export default async function RootLayout({
   return (
     <html
       lang="id"
-      className={cn("h-full", "antialiased", instrumentSerif.variable, jetbrainsMono.variable, "font-sans", geist.variable)}
+      className={cn("h-full", "antialiased", instrumentSerif.variable, jetbrainsMono.variable, plusJakarta.variable, "font-sans")}
     >
       <body className="min-h-screen bg-canvas text-ink-primary font-sans">
         <Toaster 
