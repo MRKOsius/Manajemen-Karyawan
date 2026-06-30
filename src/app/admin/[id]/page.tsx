@@ -45,7 +45,7 @@ export default async function DetailAdminPage({ params }: { params: Promise<{ id
             throw new Error("Username sudah terpakai oleh admin lain.");
         }
 
-        const updatePayload: Record<string, any> = {
+        const updatePayload: { username: string, role: string, password?: string } = {
             username,
             role
         };
